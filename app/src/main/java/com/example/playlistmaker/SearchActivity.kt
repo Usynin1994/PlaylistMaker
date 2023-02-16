@@ -32,6 +32,10 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+        findViewById<View>(R.id.go_back).setOnClickListener {
+            finish()
+        }
+
         editText = findViewById<EditText>(R.id.editText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
 
