@@ -10,34 +10,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
+        android:paddingLeft="4dp"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/layout_padding"
         >
 
         <ImageView
             android:id="@+id/go_back"
             style="@style/SettingScreenGoBackStyle"
-            android:src="@drawable/go_back"
-            ></ImageView>
+            />
 
         <TextView
             style="@style/SettingScreenTextStyle"
             android:text="@string/setting_screen"
-            ></TextView>
+            />
 
     </LinearLayout>
 
     <Switch
         android:id="@+id/switchDarkMode"
         style="@style/SettingScreenSwitchStyle"
-        android:text="@string/dark_mode"
-        />
+        android:text="@string/dark_mode" />
 
     <Button
         style="@style/SettingScreenButtonStyle"
             android:id="@+id/buttonShareApp"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="12dp"
+            android:paddingRight="4dp"
             android:text="@string/share_app"
             app:icon="@drawable/share_app"
             />
@@ -45,6 +43,7 @@
         <Button
             style="@style/SettingScreenButtonStyle"
             android:id="@+id/buttonSupport"
+            android:paddingRight="4dp"
             android:text="@string/call_support"
             app:icon="@drawable/support"
             />
@@ -52,7 +51,7 @@
         <Button
             style="@style/SettingScreenButtonStyle"
             android:id="@+id/buttonUserAgreement"
-            android:layout_marginRight="5dp"
+            android:paddingRight="8dp"
             android:text="@string/agreement"
             app:icon="@drawable/agreement"
             />

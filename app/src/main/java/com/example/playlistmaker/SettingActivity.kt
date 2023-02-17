@@ -17,9 +17,10 @@ class SettingActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.buttonShareApp).setOnClickListener {
-            val sendLink: Intent = Intent(Intent.ACTION_SEND)
-            sendLink.putExtra(Intent.EXTRA_TEXT, getString(R.string.androidDevLink))
-            sendLink.type = "text/plain"
+            val sendLink: Intent = Intent(Intent.ACTION_SEND).apply {
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.androidDevLink))
+                type = "text/plain"
+            }
             val shareApp = Intent.createChooser(sendLink, null)
             startActivity(shareApp)
         }

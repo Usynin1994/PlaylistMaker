@@ -11,21 +11,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
+        android:paddingLeft="4dp"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/layout_padding"
         >
 
         <ImageView
             android:id="@+id/go_back"
             style="@style/SettingScreenGoBackStyle"
-            android:src="@drawable/go_back"
-            ></ImageView>
+            />
 
         <TextView
             style="@style/SettingScreenTextStyle"
             android:text="@string/search"
-            ></TextView>
+            />
 
     </LinearLayout>
 
@@ -37,7 +35,7 @@
 
         <EditText
             style="@style/EditTextStyle"
-            android:id="@+id/editText"
+            android:id="@+id/inputText"
             android:hint="@string/search"
             tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck,VisualLintTextFieldSize"
             />

@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 
@@ -17,15 +18,18 @@ class SearchActivity : AppCompatActivity() {
     }
 
     lateinit var editText:EditText
+    lateinit var clearButton:ImageView
+    lateinit var savedText:String
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(SAVED_DATA, editText.text.toString())
+        outState.putString(SAVED_DATA,savedText)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        editText.setText(savedInstanceState.getString(SAVED_DATA," "))
+        savedText = savedInstanceState.getString(SAVED_DATA,"")
+        editText.setText(savedText)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,8 +40,9 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-        editText = findViewById<EditText>(R.id.editText)
-        val clearButton = findViewById<ImageView>(R.id.clearIcon)
+        editText = findViewById<EditText>(R.id.inputText)
+        clearButton = findViewById<ImageView>(R.id.clearIcon)
+        savedText = ""
 
         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
 
@@ -56,16 +61,17 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                editText.text.toString()
+                savedText = editText.text.toString()
             }
         }
         editText.addTextChangedListener(simpleTextWatcher)
     }
-}
-private fun clearButtonVisibility(s: CharSequence?): Int {
-    return if (s.isNullOrEmpty()) {
-        View.GONE
+
+    private fun clearButtonVisibility(s: CharSequence?): Int {
+        return if (s.isNullOrEmpty()) {
+            View.GONE
         } else {
             View.VISIBLE
         }
+    }
 }
