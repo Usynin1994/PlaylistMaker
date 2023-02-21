@@ -7,21 +7,26 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.example.playlistmaker.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var mainBinding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        mainBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mainBinding.root)
 
-        findViewById<View>(R.id.search_button).setOnClickListener {
+        mainBinding.searchButton.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }
 
-        findViewById<View>(R.id.media_button).setOnClickListener {
+        mainBinding.mediaButton.setOnClickListener {
             startActivity(Intent(this, MediaActivity::class.java))
         }
 
-        findViewById<View>(R.id.setting_button).setOnClickListener {
+        mainBinding.settingButton.setOnClickListener {
             startActivity(Intent(this, SettingActivity::class.java))
         }
     }

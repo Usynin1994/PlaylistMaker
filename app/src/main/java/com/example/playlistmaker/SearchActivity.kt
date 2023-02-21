@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.appcompat.widget.Toolbar
+import com.example.playlistmaker.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
 
@@ -20,6 +23,8 @@ class SearchActivity : AppCompatActivity() {
     lateinit var editText:EditText
     lateinit var clearButton:ImageView
     lateinit var savedText:String
+    lateinit var searchBinding:ActivitySearchBinding
+    lateinit var toolbar:Toolbar
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -34,15 +39,15 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        searchBinding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(searchBinding.root)
 
-        findViewById<View>(R.id.go_back).setOnClickListener {
-            finish()
-        }
-
-        editText = findViewById<EditText>(R.id.inputText)
-        clearButton = findViewById<ImageView>(R.id.clearIcon)
+        editText = searchBinding.inputText
+        clearButton = searchBinding.clearIcon
         savedText = ""
+        toolbar = searchBinding.searchToolbar
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
 
@@ -73,5 +78,9 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId==android.R.id.home) finish()
+        return super.onOptionsItemSelected(item)
     }
 }

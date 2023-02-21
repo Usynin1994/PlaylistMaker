@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    style="@style/MainLayoutStyle">
+    style="@style/MainScreenLayoutStyle">
 
     <TextView
         android:id="@+id/appName"
-        style="@style/MainScreenTextStyle"
+        style="@style/MainScreenHeaderTextStyle"
         android:text="@string/app_name"
       />
 
@@ -22,20 +22,20 @@
         <Button
             android:id="@+id/search_button"
             style="@style/MainScreenButtonStyle"
-            android:text="@string/search_button"
+            android:text="@string/search"
             app:icon="@drawable/search_button" />
 
         <Button
             android:id="@+id/media_button"
             style="@style/MainScreenButtonStyle"
-            android:text="@string/media_button"
+            android:text="@string/media"
             app:icon="@drawable/media_button"
             />
 
         <Button
             android:id="@+id/setting_button"
             style="@style/MainScreenButtonStyle"
-            android:text="@string/setting_button"
+            android:text="@string/settings"
             app:icon="@drawable/setting_button"
             />
     </LinearLayout>

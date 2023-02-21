@@ -4,19 +4,25 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
+import android.view.MenuItem
+import androidx.appcompat.widget.Toolbar
+import com.example.playlistmaker.databinding.ActivitySettingBinding
 
 class SettingActivity : AppCompatActivity() {
+
+    lateinit var settingBinding: ActivitySettingBinding
+    lateinit var toolbar: Toolbar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setting)
+        settingBinding = ActivitySettingBinding.inflate(layoutInflater)
+        setContentView(settingBinding.root)
 
-        findViewById<View>(R.id.go_back).setOnClickListener {
-            finish()
-        }
+        toolbar = settingBinding.settingToolbar
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        findViewById<View>(R.id.buttonShareApp).setOnClickListener {
+        settingBinding.buttonShareApp.setOnClickListener {
             val sendLink: Intent = Intent(Intent.ACTION_SEND).apply {
                 putExtra(Intent.EXTRA_TEXT, getString(R.string.androidDevLink))
                 type = "text/plain"
@@ -25,18 +31,24 @@ class SettingActivity : AppCompatActivity() {
             startActivity(shareApp)
         }
 
-        findViewById<View>(R.id.buttonSupport).setOnClickListener {
-            val shareIntent = Intent(Intent.ACTION_SENDTO)
-            shareIntent.data = Uri.parse("mailto:")
-            shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.supportMail)))
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mailSubject))
-            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.supportMessage))
-            startActivity(shareIntent)
+        settingBinding.buttonSupport.setOnClickListener {
+            val callSupport = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.supportMail)))
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mailSubject))
+            putExtra(Intent.EXTRA_TEXT, getString(R.string.supportMessage))
+            }
+            startActivity(callSupport)
         }
 
-        findViewById<View>(R.id.buttonUserAgreement).setOnClickListener {
+        settingBinding.buttonUserAgreement.setOnClickListener {
             val openPage = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.userAgreement)))
             startActivity(openPage)
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId==android.R.id.home) finish()
+        return super.onOptionsItemSelected(item)
     }
 }
