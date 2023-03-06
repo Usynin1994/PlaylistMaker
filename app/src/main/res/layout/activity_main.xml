@@ -28,7 +28,7 @@
         <Button
             android:id="@+id/media_button"
             style="@style/MainScreenButtonStyle"
-            android:text="@string/media"
+            android:text="@string/media_button"
             app:icon="@drawable/media_button"
             />
 
