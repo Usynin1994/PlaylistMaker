@@ -50,7 +50,7 @@
             android:id="@+id/buttonUserAgreement"
             android:paddingRight="8dp"
             android:text="@string/agreement"
-            app:icon="@drawable/agreement"
+            app:icon="@drawable/arrow_next"
             />
 
     </LinearLayout>
