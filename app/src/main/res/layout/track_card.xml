@@ -19,7 +19,7 @@
         android:orientation="vertical"
         android:layout_weight="1"
         android:layout_gravity="center"
-        android:paddingLeft="@dimen/track_card_text_padding"
+        android:paddingLeft="@dimen/track_card_icon_padding"
         >
 
         <TextView
