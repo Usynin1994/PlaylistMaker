@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Text sizes -->
     <dimen name="text_size">22sp</dimen>
-    <dimen name="corner_radius">16dp</dimen>
+    <dimen name="middle_text_size">16sp</dimen>
+    <dimen name="small_text_size">11sp</dimen>
+
+    <!-- Paddings -->
     <dimen name="main_screen_icon_padding">10dp</dimen>
     <dimen name="layout_padding">16dp</dimen>
+    <dimen name="point_padding">5dp</dimen>
+    <dimen name="track_card_text_padding">16dp</dimen>
+    <dimen name="track_card_arrow_padding">20dp</dimen>
+    <dimen name="track_card_icon_padding">8dp</dimen>
+
+    <!-- Margins -->
     <dimen name="button_margin">8dp</dimen>
-    <dimen name="setting_text_size">16sp</dimen>
     <dimen name="setting_button_margin">30dp</dimen>
+
+    <dimen name="corner_radius">16dp</dimen>
+    <dimen name="artist_image_corner_radius">2dp</dimen>
 </resources>

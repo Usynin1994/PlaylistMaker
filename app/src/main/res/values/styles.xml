@@ -48,19 +48,11 @@
         <item name="backgroundTint">@color/white_main</item>
         <item name="fontFamily">@font/ys_display_regular</item>
         <item name="android:textColor">@color/black_main</item>
-        <item name="android:textSize">@dimen/setting_text_size</item>
+        <item name="android:textSize">@dimen/middle_text_size</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:letterSpacing">0</item>
         <item name="iconGravity">end</item>
         <item name="iconTint">@color/grey_main</item>
-    </style>
-
-    <style name="ScreenHeaderTextStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/black_main</item>
-        <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:textSize">@dimen/text_size</item>
     </style>
 
     <style name="SettingScreenSwitchStyle">
@@ -69,9 +61,17 @@
         <item name="android:layout_marginTop">@dimen/setting_button_margin</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textColor">@color/black_main</item>
-        <item name="android:textSize">@dimen/setting_text_size</item>
+        <item name="android:textSize">@dimen/middle_text_size</item>
         <item name="android:trackTint">@color/grey_main</item>
         <item name="android:thumbTint">@color/grey_main</item>
+    </style>
+
+    <style name="ScreenHeaderTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black_main</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/text_size</item>
     </style>
 
 
@@ -111,6 +111,56 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.ActionBar</item>
+    </style>
+
+
+    <!-- Track Card styles -->
+    <style name="TrackNameStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingRight">@dimen/track_card_text_padding</item>
+        <item name="android:textColor">@color/black_main</item>
+        <item name="android:textSize">@dimen/middle_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="ArtistNameStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingRight">@dimen/point_padding</item>
+        <item name="android:textColor">@color/grey_main</item>
+        <item name="android:textSize">@dimen/small_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TrackTimeStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0</item>
+        <item name="android:paddingRight">@dimen/track_card_text_padding</item>
+        <item name="android:drawableStart">@drawable/point</item>
+        <item name="android:drawablePadding">@dimen/point_padding</item>
+        <item name="android:drawableTint">@color/grey_main</item>
+        <item name="android:textColor">@color/grey_main</item>
+        <item name="android:textSize">@dimen/small_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+
+    <style name="ArrowNextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/arrow_next</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:paddingRight">@dimen/track_card_arrow_padding</item>
+        <item name="tint">@color/grey_main</item>
     </style>
 
 </resources>

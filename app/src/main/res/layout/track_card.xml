@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginBottom="@dimen/button_margin"
+    >
+
+    <ImageView
+        android:id="@+id/trackImage"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:gravity="center"
+        />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:paddingLeft="@dimen/track_card_icon_padding"
+        >
+
+        <TextView
+            style="@style/TrackNameStyle"
+            android:id="@+id/trackName"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                style="@style/ArtistNameStyle"
+                android:id="@+id/artistName"
+                />
+
+            <TextView
+                style="@style/TrackTimeStyle"
+                android:id="@+id/trackTime"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        style="@style/ArrowNextStyle"
+        android:id="@+id/goTo"
+        />
+
+</LinearLayout>
