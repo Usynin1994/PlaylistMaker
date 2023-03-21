@@ -163,4 +163,52 @@
         <item name="tint">@color/white_main</item>
     </style>
 
+    <!-- Search Warning styles -->
+    <style name="searchPlaceholderStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginHorizontal">@dimen/search_placeholder_margin</item>
+    </style>
+
+    <style name="imageNotFoundStyle">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">120dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">80dp</item>
+        <item name="android:src">@drawable/not_found_night</item>
+    </style>
+
+    <style name="imageErrorStyle">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">120dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">80dp</item>
+        <item name="android:src">@drawable/error_night</item>
+    </style>
+
+    <style name="textErrorStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/button_margin</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/warning_text_size</item>
+        <item name="android:textColor">@color/white_main</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="buttonReloadStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/button_margin</item>
+        <item name="android:backgroundTint">@color/white_main</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/reload_text_size</item>
+        <item name="android:textColor">@color/black_main</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="cornerRadius">@dimen/button_reload_corner_radius</item>
+    </style>
+
 </resources>

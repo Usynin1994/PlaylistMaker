@@ -34,6 +34,8 @@
             style="@style/EditTextStyle"
             android:id="@+id/inputText"
             android:hint="@string/search"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
             tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck,VisualLintTextFieldSize"
             />
 
@@ -46,12 +48,63 @@
     </FrameLayout>
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingLeft="13dp"
             android:paddingTop="8dp"
-            />
+            >
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+            style="@style/searchPlaceholderStyle"
+            android:id="@+id/messageNotFound"
+            android:visibility="gone"
+            >
+            <ImageView
+                style="@style/imageNotFoundStyle"
+                android:id="@+id/imageNotFound"
+                />
+            <TextView
+                style="@style/textErrorStyle"
+                android:id="@+id/textNotFound"
+                android:text="@string/nothing_found"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/searchPlaceholderStyle"
+            android:id="@+id/messageError"
+            android:visibility="gone"
+            >
+            <ImageView
+                style="@style/imageErrorStyle"
+                android:id="@+id/imageError"
+                />
+            <TextView
+                style="@style/textErrorStyle"
+                android:id="@+id/textProblemOne"
+                android:text="@string/connection_problem"
+                />
+            <TextView
+                style="@style/textErrorStyle"
+                android:id="@+id/textProblemTwo"
+                android:paddingHorizontal="24dp"
+                android:text="@string/internet_error"
+                />
+            <Button
+                style="@style/buttonReloadStyle"
+                android:id="@+id/buttonReload"
+                android:text="@string/reload"
+                />
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>
