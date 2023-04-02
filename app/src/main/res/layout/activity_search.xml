@@ -34,6 +34,8 @@
             style="@style/EditTextStyle"
             android:id="@+id/inputText"
             android:hint="@string/search"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
             tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck,VisualLintTextFieldSize"
             />
 
@@ -46,12 +48,96 @@
     </FrameLayout>
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchRecycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:paddingLeft="13dp"
             android:paddingTop="8dp"
-            />
+            android:visibility="gone"
+            >
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+            style="@style/searchPlaceholderStyle"
+            android:id="@+id/messageNotFound"
+            android:visibility="gone"
+            >
+            <ImageView
+                style="@style/imageNotFoundStyle"
+                android:id="@+id/imageNotFound"
+                />
+            <TextView
+                style="@style/textErrorStyle"
+                android:id="@+id/textNotFound"
+                android:text="@string/nothing_found"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/searchPlaceholderStyle"
+            android:id="@+id/messageError"
+            android:visibility="gone"
+            >
+            <ImageView
+                style="@style/imageErrorStyle"
+                android:id="@+id/imageError"
+                />
+            <TextView
+                style="@style/textErrorStyle"
+                android:id="@+id/textProblemOne"
+                android:text="@string/connection_problem"
+                />
+            <TextView
+                style="@style/textErrorStyle"
+                android:id="@+id/textProblemTwo"
+                android:paddingHorizontal="24dp"
+                android:text="@string/internet_error"
+                />
+            <Button
+                style="@style/buttonReloadStyle"
+                android:id="@+id/buttonReload"
+                android:text="@string/reload"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/historyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:orientation="vertical"
+            android:visibility="visible"
+            >
+            <TextView
+                style="@style/textErrorStyle"
+                android:id="@+id/textHistory"
+                android:text="@string/youSearch"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/historyRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:paddingLeft="13dp"
+                android:paddingTop="20dp"
+                tools:listitem="@layout/track_card" />
+
+            <Button
+                style="@style/buttonReloadStyle"
+                android:id="@+id/buttonClearHistory"
+                android:text="@string/clear"
+                />
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>
