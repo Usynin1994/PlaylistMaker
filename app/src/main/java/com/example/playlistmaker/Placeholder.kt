@@ -2,5 +2,7 @@ package com.example.playlistmaker
 
 enum class Placeholder {
     NOTHING_FOUND,
-    INTERNET_PROBLEM
+    INTERNET_PROBLEM,
+    SUCCESS,
+    HISTORY
 }

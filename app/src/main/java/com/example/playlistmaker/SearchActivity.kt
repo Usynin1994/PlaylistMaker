@@ -24,6 +24,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+
+
 class SearchActivity : AppCompatActivity() {
 
     companion object {
@@ -39,19 +41,32 @@ class SearchActivity : AppCompatActivity() {
     lateinit var placeholderNotFound: View
     lateinit var placeholderError: View
     lateinit var buttonReload: Button
+    lateinit var historyLayout: View
+    lateinit var historyRecycler: RecyclerView
+    lateinit var buttonClearHistory: Button
+    lateinit var searchHistory: SearchHistory
+    lateinit var inputMethodManager: InputMethodManager
 
+    //Создаем Retrofit
     private val baseUrl = "https://itunes.apple.com"
     val trackList = Retrofit.Builder().baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     val itunesApi = trackList.create(ItunesApi::class.java)
-    val trackAdapter = TrackAdapter()
 
+    //Создаем адаптеры
+    private val trackAdapter = TrackAdapter {
+        searchHistory.addTrack(it)
+    }
+    private val historyAdapter = TrackAdapter {
+        searchHistory.addTrack(it)
+    }
+
+     //Сохранение и восстановление текста поиска при повороте
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SAVED_DATA,savedText)
     }
-
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         savedText = savedInstanceState.getString(SAVED_DATA,"")
@@ -66,39 +81,57 @@ class SearchActivity : AppCompatActivity() {
         searchBinding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(searchBinding.root)
 
+        val pref = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
+
+        //Инициализация
         editText = searchBinding.inputText
         clearButton = searchBinding.clearIcon
         placeholderNotFound = searchBinding.messageNotFound
         placeholderError = searchBinding.messageError
         buttonReload = searchBinding.buttonReload
         savedText = ""
+        searchRecycler = searchBinding.searchRecycler
+        historyLayout = searchBinding.historyLayout
+        historyRecycler = searchBinding.historyRecycler
+        buttonClearHistory = searchBinding.buttonClearHistory
+        inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        //Создаем объект SearchHistory
+        searchHistory = SearchHistory (pref)
+
+        //Инициализация тулбара
         toolbar = searchBinding.searchToolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        searchRecycler = searchBinding.searchRecycler
 
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-
+        //Присваиваем адаптеры
         searchRecycler.adapter = trackAdapter
+        historyRecycler.adapter = historyAdapter
+
+        //Устанавливаем начальный экран в зависимости от истории поиска
+        if (searchHistory.getHistory().isEmpty()) {
+            showContent(Placeholder.SUCCESS)
+            } else {
+                showContent(Placeholder.HISTORY)
+            }
 
         val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
-            }
-
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.visibility = clearButtonVisibility(s)
+                if (editText.hasFocus() && s?.isNotEmpty() == true) {
+                    showContent(Placeholder.SUCCESS)
+                }
+                if (editText.hasFocus() && s?.isNotEmpty() == false && searchHistory.getHistory().isNotEmpty()) {
+                    showContent(Placeholder.HISTORY)
+                }
+                historyAdapter.notifyDataSetChanged()
             }
-
             override fun afterTextChanged(s: Editable?) {
                 savedText = editText.text.toString()
             }
         }
         editText.addTextChangedListener(simpleTextWatcher)
-
-        searchRecycler.layoutManager = LinearLayoutManager(this,
-            LinearLayoutManager.VERTICAL,
-            false)
 
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -107,15 +140,21 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+
+        //Отчистка поискового запроса
         clearButton.setOnClickListener {
-            editText.setText("")
-            inputMethodManager?.hideSoftInputFromWindow(editText.windowToken, 0)
-            trackAdapter.clearTracks()
-            trackAdapter.notifyDataSetChanged()
-            editText.clearFocus()
+            searchClear()
         }
+
+        //Выполениние последнего запроса по нажатию
         buttonReload.setOnClickListener{
             search()
+        }
+
+        //Чистим историю поиска
+        buttonClearHistory.setOnClickListener {
+            searchHistory.clearHistory()
+            showContent(Placeholder.SUCCESS)
         }
     }
 
@@ -140,31 +179,53 @@ class SearchActivity : AppCompatActivity() {
                     when (response.code()) {
                         200 -> {
                             if (response.body()?.results?.isNotEmpty() == true) {
-                                trackAdapter.clearTracks()
-                                trackAdapter.setTracks(response.body()?.results!!)
-                                clearPlaceholder()
+                                showContent(Placeholder.SUCCESS, response.body()?.results!!)
                             } else {
-                                showPlaceholder(trackAdapter, Placeholder.NOTHING_FOUND)
+                                showContent(Placeholder.NOTHING_FOUND)
                             }
                         }
-                        else -> showPlaceholder(trackAdapter, Placeholder.INTERNET_PROBLEM)
+                        else -> showContent(Placeholder.INTERNET_PROBLEM)
                     }
                 }
                 override fun onFailure(call: Call<ItunesResult>, t: Throwable) {
-                    showPlaceholder(trackAdapter, Placeholder.INTERNET_PROBLEM)
+                    showContent(Placeholder.INTERNET_PROBLEM)
                 }
             })
     }
-    private fun showPlaceholder (adapter: TrackAdapter, placeholder: Placeholder) {
-        adapter.clearTracks()
-        clearPlaceholder()
+
+    //Функция отображения
+    private fun showContent (placeholder: Placeholder, trackList: List<Track> = emptyList()) {
+        clearContent()
         when (placeholder) {
             Placeholder.NOTHING_FOUND -> placeholderNotFound.visibility = View.VISIBLE
             Placeholder.INTERNET_PROBLEM -> placeholderError.visibility = View.VISIBLE
+            Placeholder.SUCCESS -> {
+                searchRecycler.visibility = View.VISIBLE;
+                trackAdapter.setTracks(trackList)
+            }
+            Placeholder.HISTORY -> {
+                historyLayout.visibility = View.VISIBLE;
+                historyAdapter.tracks = searchHistory.getHistory()
+            }
         }
     }
-    private fun clearPlaceholder () {
+
+    //Функция убирает все с экрана
+    private fun clearContent () {
         placeholderNotFound.visibility = View.GONE
         placeholderError.visibility = View.GONE
+        searchRecycler.visibility = View.GONE
+        historyLayout.visibility = View.GONE
+    }
+
+    //Функция отчисти поисковой строки
+    private fun searchClear () {
+        editText.setText("")
+        clearContent()
+        trackAdapter.clearTracks()
+        inputMethodManager?.hideSoftInputFromWindow(editText.windowToken, 0)
+        editText.clearFocus()
+        if (searchHistory.getHistory().isEmpty()) showContent(Placeholder.SUCCESS) else showContent(Placeholder.HISTORY)
+        historyAdapter.notifyDataSetChanged()
     }
 }

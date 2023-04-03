@@ -11,6 +11,8 @@
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="connection_problem">Проблемы с связью</string>
     <string name="reload">Обновить</string>
+    <string name="youSearch">Вы искали</string>
+    <string name="clear">Очистить историю</string>
 
     <string name="supportMessage">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="supportMail">maximus616161@gmail.com</string>

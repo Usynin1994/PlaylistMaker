@@ -56,9 +56,11 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchRecycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:paddingLeft="13dp"
             android:paddingTop="8dp"
+            android:visibility="gone"
             >
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -102,6 +104,37 @@
                 style="@style/buttonReloadStyle"
                 android:id="@+id/buttonReload"
                 android:text="@string/reload"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/historyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:orientation="vertical"
+            android:visibility="visible"
+            >
+            <TextView
+                style="@style/textErrorStyle"
+                android:id="@+id/textHistory"
+                android:text="@string/youSearch"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/historyRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:paddingLeft="13dp"
+                android:paddingTop="20dp"
+                tools:listitem="@layout/track_card" />
+
+            <Button
+                style="@style/buttonReloadStyle"
+                android:id="@+id/buttonClearHistory"
+                android:text="@string/clear"
                 />
         </LinearLayout>
 
