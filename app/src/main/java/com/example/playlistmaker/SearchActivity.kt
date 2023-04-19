@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -12,21 +13,22 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.retrofit.ItunesApi
 import com.example.playlistmaker.retrofit.ItunesResult
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+const val EXTRA_KEY = "TRACK_KEY"
 
-
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
 
     companion object {
         const val SAVED_DATA = "SAVED_DATA"
@@ -55,12 +57,8 @@ class SearchActivity : AppCompatActivity() {
     val itunesApi = trackList.create(ItunesApi::class.java)
 
     //Создаем адаптеры
-    private val trackAdapter = TrackAdapter {
-        searchHistory.addTrack(it)
-    }
-    private val historyAdapter = TrackAdapter {
-        searchHistory.addTrack(it)
-    }
+    private val trackAdapter = TrackAdapter (this)
+    private val historyAdapter = TrackAdapter (this)
 
      //Сохранение и восстановление текста поиска при повороте
     override fun onSaveInstanceState(outState: Bundle) {
@@ -206,6 +204,7 @@ class SearchActivity : AppCompatActivity() {
             Placeholder.HISTORY -> {
                 historyLayout.visibility = View.VISIBLE;
                 historyAdapter.tracks = searchHistory.getHistory()
+                historyAdapter.notifyDataSetChanged()
             }
         }
     }
@@ -226,6 +225,22 @@ class SearchActivity : AppCompatActivity() {
         inputMethodManager?.hideSoftInputFromWindow(editText.windowToken, 0)
         editText.clearFocus()
         if (searchHistory.getHistory().isEmpty()) showContent(Placeholder.SUCCESS) else showContent(Placeholder.HISTORY)
+        historyAdapter.notifyDataSetChanged()
+    }
+
+    //Запуск плеера с выбранным треком
+    override fun onClick (track: Track) {
+        searchHistory.addTrack(track = track)
+        val intent = Intent(this, PlayerActivity::class.java)
+        val trackTmp = Gson().toJson(track)
+        intent.putExtra(EXTRA_KEY, trackTmp)
+        startActivity(intent)
+    }
+
+    // Обновляем историю после возврата из плеера
+    override fun onResume() {
+        super.onResume()
+        historyAdapter.tracks = searchHistory.getHistory()
         historyAdapter.notifyDataSetChanged()
     }
 }

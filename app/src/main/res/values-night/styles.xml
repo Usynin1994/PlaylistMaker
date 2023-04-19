@@ -211,4 +211,83 @@
         <item name="cornerRadius">@dimen/search_buttons_corner_radius</item>
     </style>
 
+    <!-- Player Activity elements styles -->
+
+    <style name="ScrollViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/black_main</item>
+    </style>
+
+    <style name="PlayerTrackNameStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/search_placeholder_margin</item>
+        <item name="android:layout_marginHorizontal">@dimen/button_margin</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/white_main</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="PlayerArtistNameStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/player_band_name_margin</item>
+        <item name="android:layout_marginHorizontal">@dimen/button_margin</item>
+        <item name="android:textSize">@dimen/reload_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/white_main</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="PlayButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">@color/black_main</item>
+        <item name="android:layout_marginTop">@dimen/play_button_margin</item>
+        <item name="srcCompat">@drawable/play_button_night</item>
+    </style>
+
+    <style name="FloatingButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:clickable">true</item>
+        <item name="backgroundTint">@color/grey_main</item>
+        <item name="fabCustomSize">@dimen/floating_button_size</item>
+        <item name="tint">@color/white_main</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="PlayerTrackTimeStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/button_margin</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/reload_text_size</item>
+        <item name="android:textColor">@color/white_main</item>
+    </style>
+
+    <style name="InfoTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/track_info_margin</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/song_info_text_size</item>
+        <item name="android:textColor">@color/grey_main</item>
+    </style>
+
+    <style name="TrackInfoTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/song_info_text_size</item>
+        <item name="android:textColor">@color/white_main</item>
+    </style>
+
 </resources>

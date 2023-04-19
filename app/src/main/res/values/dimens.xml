@@ -6,6 +6,7 @@
     <dimen name="small_text_size">11sp</dimen>
     <dimen name="warning_text_size">19sp</dimen>
     <dimen name="reload_text_size">14sp</dimen>
+    <dimen name="song_info_text_size">13sp</dimen>
 
     <!-- Paddings -->
     <dimen name="main_screen_icon_padding">10dp</dimen>
@@ -19,8 +20,15 @@
     <dimen name="button_margin">8dp</dimen>
     <dimen name="setting_button_margin">30dp</dimen>
     <dimen name="search_placeholder_margin">24dp</dimen>
+    <dimen name="player_image_margin">40dp</dimen>
+    <dimen name="player_band_name_margin">12dp</dimen>
+    <dimen name="play_button_margin">36dp</dimen>
+    <dimen name="track_info_margin">16dp</dimen>
 
     <dimen name="corner_radius">16dp</dimen>
     <dimen name="artist_image_corner_radius">2dp</dimen>
     <dimen name="search_buttons_corner_radius">54dp</dimen>
+    <dimen name="player_image_corner_radius">8dp</dimen>
+
+    <dimen name="floating_button_size">51dp</dimen>
 </resources>
