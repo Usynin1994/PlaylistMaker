@@ -29,8 +29,7 @@ class TrackAdapter (val listener: ClickListener): RecyclerView.Adapter<TrackView
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position])
-        holder.itemView.setOnClickListener { listener.onClick(tracks.get(position)) }
+        holder.bind(tracks[position], listener)
     }
 
     override fun getItemCount(): Int {

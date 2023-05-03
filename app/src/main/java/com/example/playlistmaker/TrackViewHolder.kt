@@ -16,11 +16,15 @@ class TrackViewHolder (itemView: View): RecyclerView.ViewHolder (itemView) {
     private val trackTime = itemView.findViewById<TextView>(R.id.trackTime)
     private val trackImage = itemView.findViewById<ImageView>(R.id.trackImage)
 
-    fun bind (model: Track) {
+    fun bind (model: Track, listener: TrackAdapter.ClickListener) {
         val data= SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis.toLong())
         artistName.text = model.artistName
         trackName.text = model.trackName
         trackTime.text = data
+
+        itemView.setOnClickListener {
+            listener.onClick(model)
+        }
 
         Glide.with(itemView.context)
             .load(model.artworkUrl100)

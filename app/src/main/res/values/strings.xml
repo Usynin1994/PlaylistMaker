@@ -13,6 +13,11 @@
     <string name="reload">Обновить</string>
     <string name="youSearch">Вы искали</string>
     <string name="clear">Очистить историю</string>
+    <string name="totalTime">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
 
     <string name="supportMessage">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="supportMail">maximus616161@gmail.com</string>
@@ -21,7 +26,6 @@
     <string name="androidDevLink">https://practicum.yandex.ru/profile/android-developer/</string>
 
     <string name="baseUrl">https://itunes.apple.com</string>
-
 
 
 </resources>
