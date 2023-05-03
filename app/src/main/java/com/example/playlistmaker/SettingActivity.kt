@@ -12,7 +12,11 @@ import com.example.playlistmaker.databinding.ActivitySettingBinding
 
 class SettingActivity : AppCompatActivity() {
 
-    lateinit var settingBinding: ActivitySettingBinding
+    private val settingBinding: ActivitySettingBinding by lazy {
+        ActivitySettingBinding.inflate(layoutInflater)
+    }
+
+
     lateinit var toolbar: Toolbar
     lateinit var switchDarkMode: Switch
     lateinit var buttonShareApp: Button
@@ -21,7 +25,6 @@ class SettingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        settingBinding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(settingBinding.root)
 
         // Инициализуруем элементы

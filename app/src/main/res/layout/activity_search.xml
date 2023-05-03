@@ -113,7 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
             android:orientation="vertical"
-            android:visibility="visible"
+            android:visibility="gone"
             >
             <TextView
                 style="@style/textErrorStyle"
@@ -137,6 +137,15 @@
                 android:text="@string/clear"
                 />
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_height="@dimen/progress_bar_size"
+            android:layout_marginTop="@dimen/progress_bar_margin"
+            android:layout_gravity="center_horizontal"
+            android:indeterminateTint="@color/progress_bar_color"
+            android:visibility="gone" />
 
     </FrameLayout>
 

@@ -2,21 +2,21 @@ package com.example.playlistmaker
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
 class TrackAdapter (val listener: ClickListener): RecyclerView.Adapter<TrackViewHolder> () {
 
     internal var tracks = ArrayList<Track>()
+        set(newValue) {
+            val diffCallBack = TrackDiffCallBack(field, newValue)
+            val diffResult = DiffUtil.calculateDiff(diffCallBack)
+            field = newValue
+            diffResult.dispatchUpdatesTo(this)
+        }
 
     fun clearTracks () {
-        tracks.clear()
-        notifyDataSetChanged()
-    }
-
-    fun setTracks (newTracks: List<Track>) {
-        tracks.clear()
-        if (newTracks.isNotEmpty()) tracks.addAll(newTracks)
-        notifyDataSetChanged()
+        tracks = ArrayList<Track>()
     }
 
     fun interface ClickListener {

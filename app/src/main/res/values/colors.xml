@@ -14,6 +14,7 @@
     <color name="black_main">#1A1B22</color>
     <color name="grey_main">#AEAFB4</color>
     <color name="grey_search_background">#E6E8EB</color>
+    <color name="progress_bar_color">#6200EE</color>
 
 
 </resources>

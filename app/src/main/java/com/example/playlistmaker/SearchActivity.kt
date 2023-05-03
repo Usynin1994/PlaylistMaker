@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
@@ -13,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
@@ -31,13 +34,18 @@ const val EXTRA_KEY = "TRACK_KEY"
 class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
 
     companion object {
-        const val SAVED_DATA = "SAVED_DATA"
+        private const val SAVED_DATA = "SAVED_DATA"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
+
+    private val searchBinding: ActivitySearchBinding by lazy {
+        ActivitySearchBinding.inflate(layoutInflater)
     }
 
     lateinit var editText:EditText
     lateinit var clearButton:ImageView
     lateinit var savedText:String
-    lateinit var searchBinding: ActivitySearchBinding
     lateinit var toolbar: Toolbar
     lateinit var searchRecycler: RecyclerView
     lateinit var placeholderNotFound: View
@@ -48,9 +56,10 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
     lateinit var buttonClearHistory: Button
     lateinit var searchHistory: SearchHistory
     lateinit var inputMethodManager: InputMethodManager
+    lateinit var progressBar: ProgressBar
 
     //Создаем Retrofit
-    private val baseUrl = "https://itunes.apple.com"
+    private val baseUrl = "http://itunes.apple.com"
     val trackList = Retrofit.Builder().baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
@@ -60,23 +69,16 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
     private val trackAdapter = TrackAdapter (this)
     private val historyAdapter = TrackAdapter (this)
 
-     //Сохранение и восстановление текста поиска при повороте
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(SAVED_DATA,savedText)
-    }
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        savedText = savedInstanceState.getString(SAVED_DATA,"")
-        if (savedText.isNotEmpty()) {
-            editText.setText(savedText)
-            search()
-        }
-    }
+    // Необходимо для отложенного поиска
+    private val searchRunnable = Runnable { search() }
+    private val handler = Handler(Looper.getMainLooper())
+
+    // Переменная для клик-deboune
+    private var isClickAllowed = true
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        searchBinding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(searchBinding.root)
 
         val pref = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
@@ -93,6 +95,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
         historyRecycler = searchBinding.historyRecycler
         buttonClearHistory = searchBinding.buttonClearHistory
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        progressBar = searchBinding.progressBar
 
         //Создаем объект SearchHistory
         searchHistory = SearchHistory (pref)
@@ -117,13 +120,16 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.visibility = clearButtonVisibility(s)
+                showContent(Placeholder.LOADING)
                 if (editText.hasFocus() && s?.isNotEmpty() == true) {
+                    searchDebounce()
+                } else if (editText.hasFocus() && s?.isNotEmpty() == false && searchHistory.getHistory().isNotEmpty()) {
+                    handler.removeCallbacks(searchRunnable)
+                    showContent(Placeholder.HISTORY)
+                } else {
+                    handler.removeCallbacks(searchRunnable)
                     showContent(Placeholder.SUCCESS)
                 }
-                if (editText.hasFocus() && s?.isNotEmpty() == false && searchHistory.getHistory().isNotEmpty()) {
-                    showContent(Placeholder.HISTORY)
-                }
-                historyAdapter.notifyDataSetChanged()
             }
             override fun afterTextChanged(s: Editable?) {
                 savedText = editText.text.toString()
@@ -133,7 +139,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
 
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                search()
                 true
             }
             false
@@ -167,6 +172,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
         if (item.itemId==android.R.id.home) finish()
         return super.onOptionsItemSelected(item)
     }
+
+    // Поиск
     private fun search() {
         itunesApi.search(editText.text.toString())
             .enqueue(object: Callback<ItunesResult> {
@@ -192,20 +199,20 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
     }
 
     //Функция отображения
-    private fun showContent (placeholder: Placeholder, trackList: List<Track> = emptyList()) {
+    private fun showContent (placeholder: Placeholder, trackList: List<Track> = ArrayList()) {
         clearContent()
         when (placeholder) {
             Placeholder.NOTHING_FOUND -> placeholderNotFound.visibility = View.VISIBLE
             Placeholder.INTERNET_PROBLEM -> placeholderError.visibility = View.VISIBLE
             Placeholder.SUCCESS -> {
                 searchRecycler.visibility = View.VISIBLE;
-                trackAdapter.setTracks(trackList)
+                trackAdapter.tracks = trackList as ArrayList<Track>
             }
             Placeholder.HISTORY -> {
                 historyLayout.visibility = View.VISIBLE;
                 historyAdapter.tracks = searchHistory.getHistory()
-                historyAdapter.notifyDataSetChanged()
             }
+            Placeholder.LOADING -> progressBar.visibility = View.VISIBLE
         }
     }
 
@@ -215,6 +222,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
         placeholderError.visibility = View.GONE
         searchRecycler.visibility = View.GONE
         historyLayout.visibility = View.GONE
+        progressBar.visibility = View.GONE
     }
 
     //Функция отчисти поисковой строки
@@ -225,22 +233,51 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
         inputMethodManager?.hideSoftInputFromWindow(editText.windowToken, 0)
         editText.clearFocus()
         if (searchHistory.getHistory().isEmpty()) showContent(Placeholder.SUCCESS) else showContent(Placeholder.HISTORY)
-        historyAdapter.notifyDataSetChanged()
     }
 
     //Запуск плеера с выбранным треком
     override fun onClick (track: Track) {
-        searchHistory.addTrack(track = track)
-        val intent = Intent(this, PlayerActivity::class.java)
-        val trackTmp = Gson().toJson(track)
-        intent.putExtra(EXTRA_KEY, trackTmp)
-        startActivity(intent)
+        if (clickDebounce()) {
+            searchHistory.addTrack(track = track)
+            val intent = Intent(this, PlayerActivity::class.java)
+            intent.putExtra(EXTRA_KEY, track)
+            startActivity(intent)
+        }
     }
 
     // Обновляем историю после возврата из плеера
     override fun onResume() {
         super.onResume()
         historyAdapter.tracks = searchHistory.getHistory()
-        historyAdapter.notifyDataSetChanged()
+    }
+
+    //Сохранение и восстановление текста поиска при повороте
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(SAVED_DATA,savedText)
+    }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedText = savedInstanceState.getString(SAVED_DATA,"")
+        if (savedText.isNotEmpty()) {
+            editText.setText(savedText)
+            search()
+        }
+    }
+
+    // Отложенный поиск
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    // Запрет клика
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 }
