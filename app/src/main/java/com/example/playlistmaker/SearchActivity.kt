@@ -43,20 +43,21 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
         ActivitySearchBinding.inflate(layoutInflater)
     }
 
-    lateinit var editText:EditText
-    lateinit var clearButton:ImageView
-    lateinit var savedText:String
+    private val editText:EditText get() = searchBinding.inputText
+    private val clearButton:ImageView get() = searchBinding.clearIcon
+    private val searchRecycler: RecyclerView get() = searchBinding.searchRecycler
+    private val placeholderNotFound: View get() = searchBinding.messageNotFound
+    private val placeholderError: View get() = searchBinding.messageError
+    private val buttonReload: Button get() = searchBinding.buttonReload
+    private val historyLayout: View get() = searchBinding.historyLayout
+    private val historyRecycler: RecyclerView get() = searchBinding.historyRecycler
+    private val buttonClearHistory: Button get() = searchBinding.buttonClearHistory
+    private val progressBar: ProgressBar get() = searchBinding.progressBar
+
+    lateinit var savedText : String
     lateinit var toolbar: Toolbar
-    lateinit var searchRecycler: RecyclerView
-    lateinit var placeholderNotFound: View
-    lateinit var placeholderError: View
-    lateinit var buttonReload: Button
-    lateinit var historyLayout: View
-    lateinit var historyRecycler: RecyclerView
-    lateinit var buttonClearHistory: Button
     lateinit var searchHistory: SearchHistory
     lateinit var inputMethodManager: InputMethodManager
-    lateinit var progressBar: ProgressBar
 
     //Создаем Retrofit
     private val baseUrl = "http://itunes.apple.com"
@@ -76,7 +77,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
     // Переменная для клик-deboune
     private var isClickAllowed = true
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(searchBinding.root)
@@ -84,18 +84,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
         val pref = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
 
         //Инициализация
-        editText = searchBinding.inputText
-        clearButton = searchBinding.clearIcon
-        placeholderNotFound = searchBinding.messageNotFound
-        placeholderError = searchBinding.messageError
-        buttonReload = searchBinding.buttonReload
         savedText = ""
-        searchRecycler = searchBinding.searchRecycler
-        historyLayout = searchBinding.historyLayout
-        historyRecycler = searchBinding.historyRecycler
-        buttonClearHistory = searchBinding.buttonClearHistory
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        progressBar = searchBinding.progressBar
 
         //Создаем объект SearchHistory
         searchHistory = SearchHistory (pref)

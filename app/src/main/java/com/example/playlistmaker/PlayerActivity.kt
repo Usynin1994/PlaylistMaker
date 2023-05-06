@@ -8,12 +8,11 @@ import android.os.Looper
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -22,7 +21,7 @@ class PlayerActivity : AppCompatActivity() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
-        private const val DELAY = 500L
+        private const val DELAY_MS = 500L
     }
 
     private var playerState = STATE_DEFAULT
@@ -31,29 +30,18 @@ class PlayerActivity : AppCompatActivity() {
         ActivityPlayerBinding.inflate(layoutInflater)
     }
 
-    private lateinit var track: Track
-    private lateinit var play: ImageButton
-    private lateinit var playerTrackTime: TextView
-    private lateinit var mainThreadHandler: Handler
-
-    private var mediaPlayer = MediaPlayer()
+    private val play: ImageView get() = playerBinding.playButton
+    private val playerTrackTime: TextView get() = playerBinding.playerTrackTime
+    private val mediaPlayer = MediaPlayer()
     private val handler = Handler(Looper.getMainLooper())
+    private val time = startTimer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(playerBinding.root)
 
         // Достаем трек
-        track = intent.getSerializableExtra(EXTRA_KEY) as Track
-
-        // Хэндлер главного потока
-        mainThreadHandler = Handler(Looper.getMainLooper())
-
-        // Клопка воспроизведения
-        play = playerBinding.playButton
-
-        // Время воспроизведения
-        playerTrackTime = playerBinding.playerTrackTime
+        val track = intent.getSerializableExtra(EXTRA_KEY) as Track
 
         // Подготовка плеера
         preparePlayer(track.previewUrl)
@@ -69,11 +57,7 @@ class PlayerActivity : AppCompatActivity() {
             playerTrackName.setSelected(true)
             playerArtistName.text = track.artistName
             playerArtistName.setSelected(true)
-            trackTotalTime.text =
-                SimpleDateFormat(
-                    "mm:ss",
-                    Locale.getDefault()
-                ).format(track.trackTimeMillis.toLong())
+            trackTotalTime.text = TimeFormat.formatTime(track.trackTimeMillis.toLong())
             trackReleaseDate.text = track.releaseDate.substring(0..3)
             trackGenre.text = track.primaryGenreName
             trackCountry.text = track.country
@@ -117,27 +101,27 @@ class PlayerActivity : AppCompatActivity() {
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-            handler.removeCallbacks(startTimer())
+            handler.removeCallbacks(time)
             playerState = STATE_PREPARED
             playerTrackTime.text = getString(R.string.default_track_time)
-            play.setImageResource(R.drawable.play_button)
+            play.setImageResource(R.drawable.button_play)
         }
     }
 
     // Звпуск трека
     private fun startPlayer() {
         mediaPlayer.start()
-        play.setImageResource(R.drawable.pause_button)
+        play.setImageResource(R.drawable.button_pause)
         playerState = STATE_PLAYING
-        handler.post(startTimer())
+        handler.post(time)
     }
 
     // Трек на паузу
     private fun pausePlayer() {
         mediaPlayer.pause()
-        play.setImageResource(R.drawable.play_button)
+        play.setImageResource(R.drawable.button_play)
         playerState = STATE_PAUSED
-        handler.removeCallbacks(startTimer())
+        handler.removeCallbacks(time)
     }
 
     // Контроль воспроизведения
@@ -157,11 +141,8 @@ class PlayerActivity : AppCompatActivity() {
         return object : Runnable {
             override fun run() {
                 if (playerState == STATE_PLAYING) {
-                    playerTrackTime.text = SimpleDateFormat(
-                    "mm:ss",
-                    Locale.getDefault()
-                ).format(mediaPlayer.currentPosition)
-                handler.postDelayed(this, DELAY)}
+                    playerTrackTime.text = TimeFormat.formatTime(mediaPlayer.currentPosition.toLong())
+                handler.postDelayed(this, DELAY_MS)}
             }
         }
     }
@@ -174,6 +155,6 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
-        handler.removeCallbacks(startTimer())
+        handler.removeCallbacks(time)
     }
 }

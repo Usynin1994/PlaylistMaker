@@ -250,7 +250,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">@color/black_main</item>
         <item name="android:layout_marginTop">@dimen/play_button_margin</item>
-        <item name="srcCompat">@drawable/play_button</item>
+        <item name="tint">@color/white_main</item>
     </style>
 
     <style name="FloatingButtonStyle">

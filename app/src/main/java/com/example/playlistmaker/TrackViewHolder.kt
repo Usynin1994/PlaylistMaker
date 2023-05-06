@@ -17,10 +17,9 @@ class TrackViewHolder (itemView: View): RecyclerView.ViewHolder (itemView) {
     private val trackImage = itemView.findViewById<ImageView>(R.id.trackImage)
 
     fun bind (model: Track, listener: TrackAdapter.ClickListener) {
-        val data= SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis.toLong())
         artistName.text = model.artistName
         trackName.text = model.trackName
-        trackTime.text = data
+        trackTime.text = TimeFormat.formatTime(model.trackTimeMillis.toLong())
 
         itemView.setOnClickListener {
             listener.onClick(model)
