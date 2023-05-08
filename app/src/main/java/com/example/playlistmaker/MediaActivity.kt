@@ -8,12 +8,14 @@ import com.example.playlistmaker.databinding.ActivityMediaBinding
 
 class MediaActivity : AppCompatActivity() {
 
-    lateinit var mediaBinding: ActivityMediaBinding
+    private val mediaBinding: ActivityMediaBinding by lazy {
+        ActivityMediaBinding.inflate(layoutInflater)
+    }
+
     lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mediaBinding = ActivityMediaBinding.inflate(layoutInflater)
         setContentView(mediaBinding.root)
 
         toolbar = mediaBinding.mediaToolbar

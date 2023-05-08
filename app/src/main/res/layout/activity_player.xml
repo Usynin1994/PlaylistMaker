@@ -70,6 +70,7 @@
             app:layout_constraintEnd_toStartOf="@+id/rightBorder"
             app:layout_constraintStart_toStartOf="@+id/leftBorder"
             app:layout_constraintTop_toBottomOf="@+id/playerArtistName"
+            app:srcCompat="@drawable/button_play"
             />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -98,7 +99,7 @@
             app:layout_constraintEnd_toEndOf="@+id/playButton"
             app:layout_constraintStart_toStartOf="@+id/playButton"
             app:layout_constraintTop_toBottomOf="@+id/playButton"
-            android:text="0:30"/>
+            android:text="00:00"/>
 
         <TextView
             android:id="@+id/totalTime"
