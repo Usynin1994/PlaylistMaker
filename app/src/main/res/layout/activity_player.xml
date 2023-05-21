@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/ScrollViewStyle"
-    tools:context=".PlayerActivity">
+    tools:context=".presentation.player.PlayerActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -64,13 +64,13 @@
             app:layout_constraintTop_toBottomOf="@+id/playerTrackName"
             tools:text="Tommorow" />
 
-        <ImageButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/playButton"
             style="@style/PlayButtonStyle"
+            android:foreground="@drawable/button_play"
             app:layout_constraintEnd_toStartOf="@+id/rightBorder"
             app:layout_constraintStart_toStartOf="@+id/leftBorder"
             app:layout_constraintTop_toBottomOf="@+id/playerArtistName"
-            app:srcCompat="@drawable/button_play"
             />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
