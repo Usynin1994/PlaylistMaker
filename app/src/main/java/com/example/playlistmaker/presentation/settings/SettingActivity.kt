@@ -1,16 +1,22 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.settings
 
-import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.Switch
-import androidx.appcompat.widget.Toolbar
+import com.example.playlistmaker.presentation.App
+import com.example.playlistmaker.presentation.KEY
+import com.example.playlistmaker.presentation.SHARED_PREFS
+import com.example.playlistmaker.data.SettingsUseCasesRepositoryImpl
 import com.example.playlistmaker.databinding.ActivitySettingBinding
+import com.example.playlistmaker.domain.useCases.settingUseCases.CallSupportUseCase
+import com.example.playlistmaker.domain.useCases.settingUseCases.ShareAgreementUseCase
+import com.example.playlistmaker.domain.useCases.settingUseCases.ShareAppUseCase
 
 class SettingActivity : AppCompatActivity() {
+
+    private val shareAppUseCase by lazy { ShareAppUseCase(SettingsUseCasesRepositoryImpl(context = applicationContext)) }
+    private val callSupportUseCase by lazy { CallSupportUseCase(SettingsUseCasesRepositoryImpl(context = applicationContext)) }
+    private val shareAgreementUseCase by lazy { ShareAgreementUseCase(SettingsUseCasesRepositoryImpl(context = applicationContext)) }
 
     private val settingBinding: ActivitySettingBinding by lazy {
         ActivitySettingBinding.inflate(layoutInflater)
@@ -40,29 +46,17 @@ class SettingActivity : AppCompatActivity() {
 
             // Поделиться приложением
             buttonShareApp.setOnClickListener {
-                val sendLink: Intent = Intent(Intent.ACTION_SEND).apply {
-                    putExtra(Intent.EXTRA_TEXT, getString(R.string.androidDevLink))
-                    type = "text/plain"
-                }
-                val shareApp = Intent.createChooser(sendLink, null)
-                startActivity(shareApp)
+                startActivity(shareAppUseCase.execute())
             }
 
             // Написать в поддержку
             buttonSupport.setOnClickListener {
-                val callSupport = Intent(Intent.ACTION_SENDTO).apply {
-                    data = Uri.parse("mailto:")
-                    putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.supportMail)))
-                    putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mailSubject))
-                    putExtra(Intent.EXTRA_TEXT, getString(R.string.supportMessage))
-                }
-                startActivity(callSupport)
+                startActivity(callSupportUseCase.execute())
             }
 
             // Пользовательское соглашение
             buttonUserAgreement.setOnClickListener {
-                val openPage = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.userAgreement)))
-                startActivity(openPage)
+                startActivity(shareAgreementUseCase.execute())
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.search
 
 import android.content.Context
 import android.content.Intent
@@ -16,13 +16,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.presentation.player.PlayerActivity
+import com.example.playlistmaker.presentation.SHARED_PREFS
+import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.retrofit.ItunesApi
-import com.example.playlistmaker.retrofit.ItunesResult
-import com.google.gson.Gson
+import com.example.playlistmaker.data.retrofit.ItunesApi
+import com.example.playlistmaker.data.retrofit.ItunesResult
+import com.example.playlistmaker.domain.models.Placeholder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,8 +55,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
     private val historyRecycler: RecyclerView get() = searchBinding.historyRecycler
     private val buttonClearHistory: Button get() = searchBinding.buttonClearHistory
     private val progressBar: ProgressBar get() = searchBinding.progressBar
+    private var savedText = ""
 
-    lateinit var savedText : String
     lateinit var toolbar: Toolbar
     lateinit var searchHistory: SearchHistory
     lateinit var inputMethodManager: InputMethodManager
@@ -84,7 +86,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
         val pref = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
 
         //Инициализация
-        savedText = ""
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         //Создаем объект SearchHistory
@@ -222,7 +223,9 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
         trackAdapter.clearTracks()
         inputMethodManager?.hideSoftInputFromWindow(editText.windowToken, 0)
         editText.clearFocus()
-        if (searchHistory.getHistory().isEmpty()) showContent(Placeholder.SUCCESS) else showContent(Placeholder.HISTORY)
+        if (searchHistory.getHistory().isEmpty()) showContent(Placeholder.SUCCESS) else showContent(
+            Placeholder.HISTORY
+        )
     }
 
     //Запуск плеера с выбранным треком
