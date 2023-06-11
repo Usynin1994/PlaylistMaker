@@ -21,13 +21,13 @@
             android:name=".ui.media.MediaActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.player.PlayerActivity"
+            android:name=".ui.player.activity.PlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.setting.SettingActivity"
+            android:name=".ui.setting.activity.SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.search.SearchActivity"
+            android:name=".ui.search.activity.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".ui.main.MainActivity"

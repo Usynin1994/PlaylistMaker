@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.search
+package com.example.playlistmaker.ui.search.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -11,10 +11,9 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.presentation.search.SearchState
-import com.example.playlistmaker.presentation.search.SearchViewModel
-import com.example.playlistmaker.presentation.search.TrackAdapter
-import com.example.playlistmaker.ui.player.PlayerActivity
+import com.example.playlistmaker.ui.search.SearchState
+import com.example.playlistmaker.ui.search.view_model.SearchViewModel
+import com.example.playlistmaker.ui.player.activity.PlayerActivity
 
 const val EXTRA_KEY = "TRACK_KEY"
 

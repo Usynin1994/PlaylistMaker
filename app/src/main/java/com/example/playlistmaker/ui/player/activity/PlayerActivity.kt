@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.player
+package com.example.playlistmaker.ui.player.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,8 +11,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.presentation.player.PlayerViewModel
-import com.example.playlistmaker.ui.search.EXTRA_KEY
+import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
+import com.example.playlistmaker.ui.search.activity.EXTRA_KEY
 import com.example.playlistmaker.domain.model.PlayerState
 import com.example.playlistmaker.util.formatAsTime
 
@@ -35,7 +35,8 @@ class PlayerActivity : AppCompatActivity() {
 
         viewModel.observeState().observe(this) { state ->
             playerBinding.playButton.setOnClickListener {
-                controller(state)
+                viewModel.onPlayClick()
+                imageController(state)
             }
             if (state == PlayerState.STATE_COMPLETE) {
                 playerBinding.playerTrackTime.text = getString(R.string.default_track_time)
@@ -92,18 +93,10 @@ class PlayerActivity : AppCompatActivity() {
             ResourcesCompat.getDrawable(resources, R.drawable.button_pause, null)
     }
 
-    // Хз как это отсюда уносить, еслиможно оставить - пусть лежит
-    private fun controller(state: PlayerState) {
+    private fun imageController(state: PlayerState) {
         when (state) {
-            PlayerState.STATE_PREPARED, PlayerState.STATE_COMPLETE, PlayerState.STATE_PAUSED -> {
-                viewModel.play()
-                setPauseIcon()
-            }
-
-            PlayerState.STATE_PLAYING -> {
-                viewModel.pause()
-                setPlayIcon()
-            }
+            PlayerState.STATE_PLAYING -> setPlayIcon()
+            else -> setPauseIcon()
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.setting
+package com.example.playlistmaker.ui.setting.activity
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -8,7 +8,7 @@ import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingBinding
 import com.example.playlistmaker.domain.model.EmailData
-import com.example.playlistmaker.presentation.setting.SettingViewModel
+import com.example.playlistmaker.ui.setting.view_model.SettingViewModel
 
 class SettingActivity : AppCompatActivity() {
 

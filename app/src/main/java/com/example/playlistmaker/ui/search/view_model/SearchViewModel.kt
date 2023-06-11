@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.search
+package com.example.playlistmaker.ui.search.view_model
 
 import android.content.Context
 import android.os.Handler
@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.domain.api.search.TrackInteractor
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.ui.search.SearchState
 import com.example.playlistmaker.util.Creator
 
 

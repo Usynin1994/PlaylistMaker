@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.player
+package com.example.playlistmaker.ui.player.view_model
 
 import android.os.Handler
 import android.os.Looper
@@ -24,7 +24,7 @@ class PlayerViewModel (val playerInteractor: PlayerInteractor): ViewModel() {
 
     private val handler = Handler(Looper.getMainLooper())
 
-    val time = object : Runnable {override fun run() {
+    private val time = object : Runnable {override fun run() {
         val position = playerInteractor.getPosition()
         timeLiveData.postValue(position.formatAsTime())
         handler.postDelayed(this, TRACK_TIME_DELAY)
@@ -55,6 +55,13 @@ class PlayerViewModel (val playerInteractor: PlayerInteractor): ViewModel() {
     fun release () {
         playerInteractor.release()
         handler.removeCallbacks(time)
+    }
+
+    fun onPlayClick () {
+        when (stateLiveData.value) {
+            PlayerState.STATE_PLAYING -> pause()
+            else -> play()
+        }
     }
 
     companion object {
