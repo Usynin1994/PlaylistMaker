@@ -1,15 +1,10 @@
 package com.example.playlistmaker.ui.setting.view_model
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.domain.api.setting.SettingInteractor
 import com.example.playlistmaker.domain.model.EmailData
-import com.example.playlistmaker.util.Creator
 
 class SettingViewModel (private val settingInteractor: SettingInteractor): ViewModel() {
 
@@ -27,13 +22,5 @@ class SettingViewModel (private val settingInteractor: SettingInteractor): ViewM
     fun setDarkMode(mode: Boolean) {
         settingInteractor.setDarkMode(mode)
         darkMode.postValue(mode)
-    }
-
-    companion object {
-        fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SettingViewModel(Creator.provideSettingInteractor(context))
-            }
-        }
     }
 }

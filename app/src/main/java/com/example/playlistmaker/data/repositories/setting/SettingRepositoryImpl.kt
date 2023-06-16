@@ -7,7 +7,8 @@ import com.example.playlistmaker.data.SharedPreferencesClient
 import com.example.playlistmaker.domain.api.setting.SettingRepository
 import com.example.playlistmaker.domain.model.EmailData
 
-class SettingRepositoryImpl (private val context: Context, private val sp: SharedPreferencesClient) : SettingRepository {
+class SettingRepositoryImpl (private val context: Context,
+                             private val sp: SharedPreferencesClient) : SettingRepository {
     override fun setDarkMode(mode: Boolean) {
         sp.setDarkMode(mode)
     }
