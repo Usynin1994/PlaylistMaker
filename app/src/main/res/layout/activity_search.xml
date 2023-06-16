@@ -24,28 +24,28 @@
         android:padding="@dimen/layout_padding"
         >
 
-    <FrameLayout
-        android:id="@+id/search_frame_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        <FrameLayout
+            android:id="@+id/search_frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
 
-        <EditText
-            style="@style/EditTextStyle"
-            android:id="@+id/inputText"
-            android:hint="@string/search"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
-            tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck,VisualLintTextFieldSize"
-            />
+            <EditText
+                style="@style/EditTextStyle"
+                android:id="@+id/inputText"
+                android:hint="@string/search"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck,VisualLintTextFieldSize"
+                />
 
-        <ImageView
-            style="@style/ClearButtonStyle"
-            android:id="@+id/clearIcon"
-            tools:ignore="ContentDescription,ImageContrastCheck"
-            />
+            <ImageView
+                style="@style/ClearButtonStyle"
+                android:id="@+id/clearIcon"
+                tools:ignore="ContentDescription,ImageContrastCheck"
+                />
 
-    </FrameLayout>
+        </FrameLayout>
     </LinearLayout>
 
     <FrameLayout

@@ -29,12 +29,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-                <TextView
+            <TextView
                 style="@style/ScreenHeaderTextStyle"
                 android:text=""
-        />
+                />
 
-    </androidx.appcompat.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
         <ImageView
             android:id="@+id/playerTrackImage"
@@ -81,7 +81,7 @@
             app:layout_constraintStart_toStartOf="@+id/leftBorder"
             app:layout_constraintTop_toTopOf="@+id/playButton"
             app:srcCompat="@drawable/add_to_media_btn"
-          />
+            />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/likeButton"
@@ -91,7 +91,7 @@
             app:layout_constraintEnd_toStartOf="@+id/rightBorder"
             app:layout_constraintTop_toTopOf="@+id/playButton"
             app:srcCompat="@drawable/like_btn"
-           />
+            />
 
         <TextView
             android:id="@+id/playerTrackTime"
