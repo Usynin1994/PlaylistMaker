@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -15,33 +14,25 @@ import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.ui.search.activity.EXTRA_KEY
 import com.example.playlistmaker.domain.model.PlayerState
 import com.example.playlistmaker.util.formatAsTime
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
+
+    private val viewModel: PlayerViewModel by viewModel()
 
     private val playerBinding: ActivityPlayerBinding by lazy {
         ActivityPlayerBinding.inflate(layoutInflater)
     }
 
-    private lateinit var viewModel: PlayerViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(playerBinding.root)
 
-        viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory())[PlayerViewModel::class.java]
-
         val track = intent.getSerializableExtra(EXTRA_KEY) as Track
-        viewModel.prepare(track.previewUrl)
+        track.previewUrl?.let {viewModel.prepare(track.previewUrl)}
 
         viewModel.observeState().observe(this) { state ->
-            playerBinding.playButton.setOnClickListener {
-                viewModel.onPlayClick()
-                imageController(state)
-            }
-            if (state == PlayerState.STATE_COMPLETE) {
-                playerBinding.playerTrackTime.text = getString(R.string.default_track_time)
-                setPlayIcon()
-            }
+            imageController(state)
         }
 
         viewModel.observeTime().observe(this) {
@@ -60,7 +51,7 @@ class PlayerActivity : AppCompatActivity() {
             playerArtistName.text = track.artistName
             playerArtistName.setSelected(true)
             trackTotalTime.text = track.trackTimeMillis.toLong().formatAsTime()
-            trackReleaseDate.text = track.releaseDate.substring(0..3)
+            trackReleaseDate.text?.let {trackReleaseDate.text = track.releaseDate?.substring(0..3)}
             trackGenre.text = track.primaryGenreName
             trackCountry.text = track.country
 
@@ -72,6 +63,10 @@ class PlayerActivity : AppCompatActivity() {
                 trackAlbum.text = track.collectionName
                 playerTrackTime.text = getString(R.string.default_track_time)
 
+            }
+
+            playButton.setOnClickListener {
+                viewModel.onPlayClick()
             }
         }
 
@@ -95,8 +90,12 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun imageController(state: PlayerState) {
         when (state) {
-            PlayerState.STATE_PLAYING -> setPlayIcon()
-            else -> setPauseIcon()
+            PlayerState.STATE_PLAYING -> setPauseIcon()
+            PlayerState.STATE_COMPLETE -> {
+                playerBinding.playerTrackTime.text = getString(R.string.default_track_time)
+                setPlayIcon()
+            }
+            else -> setPlayIcon()
         }
     }
 
@@ -107,7 +106,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.release()
+        viewModel.reset()
     }
 
     override fun onPause() {

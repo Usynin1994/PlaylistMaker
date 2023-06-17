@@ -2,6 +2,11 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.di.playerViewModelModule
+import com.example.playlistmaker.di.searchViewModelModule
+import com.example.playlistmaker.di.settingViewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 const val SHARED_PREFS = "SHARED_PREFS"
 const val KEY = "KEY"
@@ -11,8 +16,17 @@ class App : Application() {
     var darkMode = false
 
     override fun onCreate() {
-
         super.onCreate()
+
+        startKoin {
+            androidContext(this@App)
+            modules(
+                settingViewModelModule,
+                playerViewModelModule,
+                searchViewModelModule
+            )
+        }
+
         val sp = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
         darkMode = sp.getBoolean(KEY, false)
         switchTheme(darkMode)

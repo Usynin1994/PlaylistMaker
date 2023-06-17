@@ -8,16 +8,18 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.search.SearchState
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.ui.player.activity.PlayerActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val EXTRA_KEY = "TRACK_KEY"
 
 class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
+
+    private val viewModel: SearchViewModel by viewModel()
 
     private val searchBinding: ActivitySearchBinding by lazy {
         ActivitySearchBinding.inflate(layoutInflater)
@@ -28,7 +30,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
     private var isCkickAllowed = true
 
     private lateinit var toolbar: Toolbar
-    private lateinit var viewModel: SearchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +38,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
         toolbar = searchBinding.searchToolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        viewModel = ViewModelProvider(this,
-            SearchViewModel.getViewModelFactory(this))[SearchViewModel::class.java]
 
         viewModel.showHistory()
 

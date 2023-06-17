@@ -17,8 +17,8 @@ class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInt
         repository.pausePlayer()
     }
 
-    override fun release() {
-        repository.release()
+    override fun reset() {
+        repository.reset()
     }
 
     override fun getPosition(): Long = repository.getPosition()
