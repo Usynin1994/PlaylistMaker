@@ -45,7 +45,7 @@ class SearchViewModel (private val trackInteractor: TrackInteractor): ViewModel(
     }
 
     private fun searchRequest(newSearchText: String) {
-        // Если это убрать в дебаунс - лобится баг с вьюхами, не стал делать
+        // Если это убрать в дебаунс - ловится баг с вьюхами, не стал делать
         if (newSearchText.isNotEmpty()) {
             renderState(SearchState.Loading)
 

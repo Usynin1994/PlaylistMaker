@@ -1,18 +1,18 @@
 package com.example.playlistmaker.ui.player.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.domain.model.PlayerState
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.ui.search.activity.EXTRA_KEY
-import com.example.playlistmaker.domain.model.PlayerState
 import com.example.playlistmaker.util.formatAsTime
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -44,6 +44,9 @@ class PlayerActivity : AppCompatActivity() {
             // Тулбар
             setSupportActionBar(playerToolbar)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            playerToolbar.setNavigationOnClickListener {
+                finish()
+            }
 
             // Отображаем информацию о треке
             playerTrackName.text = track.trackName
@@ -97,11 +100,6 @@ class PlayerActivity : AppCompatActivity() {
             }
             else -> setPlayIcon()
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId==android.R.id.home) finish()
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {

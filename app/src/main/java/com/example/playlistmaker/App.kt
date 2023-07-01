@@ -3,8 +3,10 @@ package com.example.playlistmaker
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.di.playerViewModelModule
+import com.example.playlistmaker.di.playlistsFragmentViewModelModule
 import com.example.playlistmaker.di.searchViewModelModule
 import com.example.playlistmaker.di.settingViewModelModule
+import com.example.playlistmaker.di.tracksFragmentViewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -23,7 +25,9 @@ class App : Application() {
             modules(
                 settingViewModelModule,
                 playerViewModelModule,
-                searchViewModelModule
+                searchViewModelModule,
+                tracksFragmentViewModelModule,
+                playlistsFragmentViewModelModule
             )
         }
 

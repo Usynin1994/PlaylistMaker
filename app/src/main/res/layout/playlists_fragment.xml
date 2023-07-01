@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <Button
+        style="@style/buttonReloadStyle"
+        android:id="@+id/buttonReload"
+        android:text="@string/new_playlist"
+        android:layout_marginTop="@dimen/search_placeholder_margin"
+        />
+
+    <TextView
+        android:id="@+id/emptyPlaylist"
+        style = "@style/textErrorStyle"
+        android:layout_marginTop="@dimen/player_image_margin"
+        android:text="@string/empty_playlists"
+        android:visibility="visible"
+        app:drawableTopCompat="@drawable/not_found"/>
+
+</LinearLayout>

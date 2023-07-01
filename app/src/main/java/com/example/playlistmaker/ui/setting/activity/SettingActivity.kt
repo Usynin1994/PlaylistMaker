@@ -30,6 +30,9 @@ class SettingActivity : AppCompatActivity() {
         with (settingBinding) {
             setSupportActionBar(settingToolbar)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            settingToolbar.setNavigationOnClickListener {
+                finish()
+            }
 
             buttonShareApp.setOnClickListener {
                 viewModel.shareApp(getString(R.string.androidDevLink))
@@ -50,10 +53,5 @@ class SettingActivity : AppCompatActivity() {
         settingBinding.switchDarkMode.setOnCheckedChangeListener { switcher, isChecked ->
             viewModel.setDarkMode(isChecked)
         }
-
-    }
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId==android.R.id.home) finish()
-        return super.onOptionsItemSelected(item)
     }
 }

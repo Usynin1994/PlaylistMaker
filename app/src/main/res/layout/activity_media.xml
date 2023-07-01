@@ -9,20 +9,20 @@
         android:id="@+id/mediaToolbar"
         style="@style/ToolbarStyle"
         >
-
         <TextView
             style="@style/ScreenHeaderTextStyle"
             android:text="@string/media_button"
             />
-
     </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        style="@style/TablayoutStyle"
+        />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/layout_padding"
-        >
-    </LinearLayout>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.ui.search.activity.TrackAdapter
 import com.example.playlistmaker.util.formatAsTime
 
 class TrackViewHolder (itemView: View): RecyclerView.ViewHolder (itemView) {
