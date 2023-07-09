@@ -1,12 +1,12 @@
 package com.example.playlistmaker.ui.main
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMainBinding
-import com.example.playlistmaker.ui.media.activity.MediaActivity
-import com.example.playlistmaker.ui.search.activity.SearchActivity
-import com.example.playlistmaker.ui.setting.activity.SettingActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,16 +19,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(mainBinding.root)
 
-        mainBinding.searchButton.setOnClickListener {
-            startActivity(Intent(this, SearchActivity::class.java))
-        }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.containerView) as NavHostFragment
+        val navController = navHostFragment.navController
 
-        mainBinding.mediaButton.setOnClickListener {
-            startActivity(Intent(this, MediaActivity::class.java))
-        }
+        mainBinding.bottomNavigationView.setupWithNavController(navController)
 
-        mainBinding.settingButton.setOnClickListener {
-            startActivity(Intent(this, SettingActivity::class.java))
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.playerFragment -> {
+                    mainBinding.bottomNavigationView.visibility = View.GONE
+                    mainBinding.border.visibility = View.GONE
+                }
+                else -> {
+                    mainBinding.bottomNavigationView.visibility = View.VISIBLE
+                    mainBinding.border.visibility = View.VISIBLE
+                }
+            }
         }
     }
 }

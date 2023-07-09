@@ -42,4 +42,7 @@ class SharedPreferencesClientImpl (private val sp: SharedPreferences) : SharedPr
         sp.edit().remove(HISTORY_KEY).apply()
     }
 
+    override fun getTrack(): Track {
+        return getHistory()[0]
+    }
 }

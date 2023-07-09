@@ -11,5 +11,5 @@ data class Track(val artistName: String,
                  val trackId: Int,
                  val trackName: String,
                  val trackTimeMillis: Int,
-                 val collectionName: String
+                 val collectionName: String?
                  ) : Serializable

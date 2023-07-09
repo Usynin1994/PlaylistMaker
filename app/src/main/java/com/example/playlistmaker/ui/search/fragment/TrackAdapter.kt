@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.search.activity
+package com.example.playlistmaker.ui.search.fragment
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -19,7 +19,7 @@ class TrackAdapter (val listener: ClickListener): RecyclerView.Adapter<TrackView
         }
 
     fun clearTracks () {
-        tracks = ArrayList<Track>()
+        tracks = ArrayList()
     }
 
     fun interface ClickListener {

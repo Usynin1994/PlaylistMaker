@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/ScrollViewStyle"
-    tools:context=".presentation.player.PlayerActivity">
+    tools:context=".ui.player.fragment.PlayerFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,18 +23,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <androidx.appcompat.widget.Toolbar
+        <android.widget.Toolbar
             android:id="@+id/playerToolbar"
+            android:contentInsetStart="@dimen/arrow_padding"
             style="@style/ToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
             <TextView
+                android:id="@+id/go_back"
                 style="@style/ScreenHeaderTextStyle"
                 android:text=""
+                android:drawableLeft="@drawable/go_back"
                 />
 
-        </androidx.appcompat.widget.Toolbar>
+        </android.widget.Toolbar>
 
         <ImageView
             android:id="@+id/playerTrackImage"

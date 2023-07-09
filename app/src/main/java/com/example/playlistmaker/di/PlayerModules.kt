@@ -13,8 +13,8 @@ val playerViewModelModule = module {
     viewModel {
         PlayerViewModel(get())
     }
-    single<PlayerInteractor> {
-        PlayerInteractorImpl(get())
+    factory<PlayerInteractor> {
+        PlayerInteractorImpl(get(), get())
     }
     single<PlayerRepository> {
         PlayerRepositoryImpl(get())

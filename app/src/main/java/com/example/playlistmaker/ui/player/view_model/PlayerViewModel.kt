@@ -7,9 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.api.player.PlayerInteractor
 import com.example.playlistmaker.domain.model.PlayerState
+import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.formatAsTime
 
-class PlayerViewModel (val playerInteractor: PlayerInteractor): ViewModel() {
+class PlayerViewModel (private val playerInteractor: PlayerInteractor): ViewModel() {
 
     init {
         playerInteractor.setOnStateChangeListener { state ->
@@ -33,9 +34,13 @@ class PlayerViewModel (val playerInteractor: PlayerInteractor): ViewModel() {
     private val timeLiveData = MutableLiveData<String>()
     fun observeTime(): LiveData<String> = timeLiveData
 
-    fun prepare (url: String) {
+    private val trackLiveData = MutableLiveData<Track>()
+    fun observeTrack(): LiveData<Track> = trackLiveData
+
+    fun prepare () {
         handler.removeCallbacks(time)
-        playerInteractor.preparePlayer(url)
+        playerInteractor.getTrack().previewUrl?.let { playerInteractor.preparePlayer(it) }
+        trackLiveData.postValue(playerInteractor.getTrack())
     }
 
     fun play () {
