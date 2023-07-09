@@ -1,10 +1,7 @@
 package com.example.playlistmaker.data.storage
 
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.example.playlistmaker.KEY
-import com.example.playlistmaker.SHARED_PREFS
 import com.example.playlistmaker.data.SharedPreferencesClient
 import com.example.playlistmaker.domain.model.Track
 import com.google.gson.Gson

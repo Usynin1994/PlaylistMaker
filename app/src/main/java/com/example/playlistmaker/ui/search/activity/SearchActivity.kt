@@ -1,18 +1,18 @@
 package com.example.playlistmaker.ui.search.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doOnTextChanged
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.ui.search.SearchState
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
-import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val EXTRA_KEY = "TRACK_KEY"
@@ -29,15 +29,15 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
     private val historyAdapter = TrackAdapter (this)
     private var isCkickAllowed = true
 
-    private lateinit var toolbar: Toolbar
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(searchBinding.root)
 
-        toolbar = searchBinding.searchToolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(searchBinding.searchToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        searchBinding.searchToolbar.setNavigationOnClickListener {
+            finish()
+        }
 
         viewModel.showHistory()
 
@@ -131,11 +131,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
         searchBinding.searchRecycler.visibility = View.GONE
         searchBinding.historyLayout.visibility = View.GONE
         searchBinding.progressBar.visibility = View.GONE
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId==android.R.id.home) finish()
-        return super.onOptionsItemSelected(item)
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
