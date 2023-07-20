@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.media.activity
+package com.example.playlistmaker.ui.media.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.LikedTracksFragmentBinding
 import com.example.playlistmaker.ui.media.view_model.TracksFragmentViewModel
-import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TracksFragment : Fragment() {
 
-    private val viewModel by activityViewModel<TracksFragmentViewModel>()
+    private val viewModel by viewModel<TracksFragmentViewModel>()
 
     private lateinit var binding: LikedTracksFragmentBinding
 

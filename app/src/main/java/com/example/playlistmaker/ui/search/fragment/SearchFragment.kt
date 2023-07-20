@@ -1,51 +1,46 @@
-package com.example.playlistmaker.ui.search.activity
+package com.example.playlistmaker.ui.search.fragment
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.ui.search.SearchState
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-const val EXTRA_KEY = "TRACK_KEY"
-
-class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
+class SearchFragment : Fragment(), TrackAdapter.ClickListener {
 
     private val viewModel: SearchViewModel by viewModel()
 
-    private val searchBinding: ActivitySearchBinding by lazy {
-        ActivitySearchBinding.inflate(layoutInflater)
-    }
+    private lateinit var searchBinding: FragmentSearchBinding
 
     private val trackAdapter = TrackAdapter (this)
     private val historyAdapter = TrackAdapter (this)
     private var isCkickAllowed = true
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(searchBinding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        searchBinding = FragmentSearchBinding.inflate(inflater, container, false)
+        return searchBinding.root
+    }
 
-        setSupportActionBar(searchBinding.searchToolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        searchBinding.searchToolbar.setNavigationOnClickListener {
-            finish()
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        viewModel.showHistory()
-
-        viewModel.observeState().observe(this) {
+        viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
 
-        viewModel.observeClick().observe(this) {
+        viewModel.observeClick().observe(viewLifecycleOwner) {
             isCkickAllowed = it
         }
 
@@ -73,11 +68,8 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
     override fun onClick (track: Track) {
         if (isCkickAllowed) {
             viewModel.saveTrack(track)
-            val intent = Intent(this, PlayerActivity::class.java)
-            intent.putExtra(
-                EXTRA_KEY, track)
             viewModel.clickDebounce()
-            startActivity(intent)
+            findNavController().navigate(R.id.action_searchFragment_to_playerFragment)
         }
     }
 
@@ -90,6 +82,7 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
             is SearchState.History -> showHistory(state.tracks)
             is SearchState.ClearScreen -> showClearScreen()
         }
+
     }
 
     private fun showLoading() {
@@ -117,7 +110,6 @@ class SearchActivity : AppCompatActivity(), TrackAdapter.ClickListener {
     private fun showHistory (tracks: List<Track>) {
         clearContent()
         historyAdapter.tracks = tracks as ArrayList<Track>
-        Log.d("TEST", tracks.toString())
         searchBinding.historyLayout.visibility = View.VISIBLE
     }
 

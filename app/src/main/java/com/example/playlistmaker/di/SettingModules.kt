@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.example.playlistmaker.SHARED_PREFS
 import com.example.playlistmaker.data.SharedPreferencesClient
+import com.example.playlistmaker.data.repositories.player.PlayerRepositoryImpl
 import com.example.playlistmaker.data.repositories.setting.SettingRepositoryImpl
 import com.example.playlistmaker.data.repositories.track.TrackRepositoryImpl
 import com.example.playlistmaker.data.storage.SharedPreferencesClientImpl
 import com.example.playlistmaker.domain.api.setting.SettingInteractor
 import com.example.playlistmaker.domain.api.setting.SettingRepository
+import com.example.playlistmaker.domain.impl.player.PlayerInteractorImpl
 import com.example.playlistmaker.domain.impl.setting.SettingInteractorImpl
 import com.example.playlistmaker.ui.setting.view_model.SettingViewModel
 import org.koin.android.ext.koin.androidContext
@@ -31,7 +33,7 @@ val settingViewModelModule = module {
 
     single<SharedPreferencesClient> {
         SharedPreferencesClientImpl(get())
-    } binds(arrayOf(TrackRepositoryImpl::class, SettingRepositoryImpl::class))
+    } binds(arrayOf(TrackRepositoryImpl::class, SettingRepositoryImpl::class, PlayerInteractorImpl::class))
 
     single<SharedPreferences> {
         androidContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)

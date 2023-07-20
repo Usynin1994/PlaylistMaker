@@ -12,11 +12,16 @@ import com.example.playlistmaker.ui.search.SearchState
 
 class SearchViewModel (private val trackInteractor: TrackInteractor): ViewModel()  {
 
+    private val stateLiveData = MutableLiveData<SearchState>()
+
+    init {
+        showHistory()
+    }
+
     private val handler = Handler(Looper.getMainLooper())
 
     private var latestSearchText: String? = null
 
-    private val stateLiveData = MutableLiveData<SearchState>()
     fun observeState(): LiveData<SearchState> = stateLiveData
 
     private val clickLiveData = MutableLiveData<Boolean>()

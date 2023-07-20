@@ -10,7 +10,7 @@ class SettingViewModel (private val settingInteractor: SettingInteractor): ViewM
 
     val mode = settingInteractor.getMode()
 
-    private val darkMode = MutableLiveData<Boolean>(mode)
+    private val darkMode = MutableLiveData(mode)
     fun observeDarkMode(): LiveData<Boolean> = darkMode
 
     fun shareApp(url: String) {settingInteractor.shareApp(url)}
