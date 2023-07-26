@@ -1,90 +1,75 @@
 package com.example.playlistmaker.ui.search.view_model
 
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.search.TrackInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.search.SearchState
+import com.example.playlistmaker.util.debounce
+import kotlinx.coroutines.launch
 
 class SearchViewModel (private val trackInteractor: TrackInteractor): ViewModel()  {
 
-    private val stateLiveData = MutableLiveData<SearchState>()
+    private var latestSearchText: String? = null
+
+    private val trackSearchDebounce = debounce<String>(SEARCH_DEBOUNCE_DELAY,
+        viewModelScope,
+        true) {
+        searchRequest(it)
+    }
+
+    private val _stateLiveData = MutableLiveData<SearchState>()
+    val stateLiveData : LiveData<SearchState> = _stateLiveData
 
     init {
         showHistory()
     }
 
-    private val handler = Handler(Looper.getMainLooper())
-
-    private var latestSearchText: String? = null
-
-    fun observeState(): LiveData<SearchState> = stateLiveData
-
-    private val clickLiveData = MutableLiveData<Boolean>()
-    fun observeClick(): LiveData<Boolean> = clickLiveData
-
-    override fun onCleared() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-    }
-
     fun searchDebounce(changedText: String) {
-        if (latestSearchText == changedText) {
-            return
+        if (latestSearchText != changedText) {
+            latestSearchText = changedText
+            trackSearchDebounce(changedText)
         }
-
-        this.latestSearchText = changedText
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-
-        val searchRunnable = Runnable { searchRequest(changedText) }
-
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime,
-        )
     }
 
     private fun searchRequest(newSearchText: String) {
-        // Если это убрать в дебаунс - ловится баг с вьюхами, не стал делать
         if (newSearchText.isNotEmpty()) {
             renderState(SearchState.Loading)
 
-            trackInteractor.searchTrack(newSearchText, object : TrackInteractor.TrackConsumer {
-                override fun consume(foundTracks: List<Track>?, errorCode: Int?) {
-
-                    when {
-                        errorCode != null -> {
-                            renderState(
-                                SearchState.Error()
-                            )
-                        }
-
-                        foundTracks.isNullOrEmpty() -> {
-                            renderState(
-                                SearchState.Empty()
-                            )
-                        }
-
-                        else -> {
-                            renderState(
-                                SearchState.Content(
-                                    tracks = foundTracks,
+            viewModelScope.launch {
+                trackInteractor
+                    .searchTrack(newSearchText)
+                    .collect { pair ->
+                        when {
+                            pair.second != null -> {
+                                renderState(
+                                    SearchState.Error()
                                 )
-                            )
+                            }
+
+                            pair.first.isNullOrEmpty() -> {
+                                renderState(
+                                    SearchState.Empty()
+                                )
+                            }
+
+                            else -> {
+                                renderState(
+                                    SearchState.Content(
+                                        tracks = pair.first!!,
+                                    )
+                                )
+                            }
                         }
                     }
-                }
-            })
+            }
         }
     }
 
     private fun renderState(state: SearchState) {
-        stateLiveData.postValue(state)
+        _stateLiveData.postValue(state)
     }
 
     fun showHistory() {
@@ -112,16 +97,7 @@ class SearchViewModel (private val trackInteractor: TrackInteractor): ViewModel(
 
     fun getHistory() = trackInteractor.getHistory()
 
-    fun clickDebounce() {
-        if (clickLiveData.value != true) {
-            clickLiveData.postValue(false)
-            handler.postDelayed({ clickLiveData.postValue(true) }, CLICK_DEBOUNCE_DELAY)
-        }
-    }
-
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private val SEARCH_REQUEST_TOKEN = Any()
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

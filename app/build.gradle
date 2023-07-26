@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.playlistmaker"
-        minSdk 28
+        minSdk 31
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -56,4 +56,5 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
     implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
     implementation "androidx.fragment:fragment-ktx:1.5.6"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }

@@ -35,17 +35,15 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.prepare()
-
-        viewModel.observeTrack().observe(viewLifecycleOwner) {
+        viewModel.trackLiveData.observe(viewLifecycleOwner) {
             drawPlayer(it)
         }
 
-        viewModel.observeState().observe(viewLifecycleOwner) { state ->
+        viewModel.stateLiveData.observe(viewLifecycleOwner) { state ->
             imageController(state)
         }
 
-        viewModel.observeTime().observe(viewLifecycleOwner) {
+        viewModel.timeLiveData.observe(viewLifecycleOwner) {
             playerBinding.playerTrackTime.text = it
         }
 

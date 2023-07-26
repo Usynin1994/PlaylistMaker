@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.search.SearchState
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
+import com.example.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment(), TrackAdapter.ClickListener {
@@ -20,9 +22,10 @@ class SearchFragment : Fragment(), TrackAdapter.ClickListener {
 
     private lateinit var searchBinding: FragmentSearchBinding
 
-    private val trackAdapter = TrackAdapter (this)
-    private val historyAdapter = TrackAdapter (this)
-    private var isCkickAllowed = true
+    private var trackAdapter:TrackAdapter? = null
+    private var historyAdapter:TrackAdapter? = null
+
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,12 +39,18 @@ class SearchFragment : Fragment(), TrackAdapter.ClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeState().observe(viewLifecycleOwner) {
-            render(it)
+        trackAdapter = TrackAdapter (this)
+        historyAdapter = TrackAdapter (this)
+
+        onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false) { track ->
+            viewModel.saveTrack(track)
+            findNavController().navigate(R.id.action_searchFragment_to_playerFragment)
         }
 
-        viewModel.observeClick().observe(viewLifecycleOwner) {
-            isCkickAllowed = it
+        viewModel.stateLiveData.observe(viewLifecycleOwner) {
+            render(it)
         }
 
         searchBinding.searchRecycler.adapter = trackAdapter
@@ -64,13 +73,8 @@ class SearchFragment : Fragment(), TrackAdapter.ClickListener {
             viewModel.doLatestSearch()
         }
     }
-
     override fun onClick (track: Track) {
-        if (isCkickAllowed) {
-            viewModel.saveTrack(track)
-            viewModel.clickDebounce()
-            findNavController().navigate(R.id.action_searchFragment_to_playerFragment)
-        }
+        onTrackClickDebounce(track)
     }
 
     private fun render(state: SearchState) {
@@ -82,7 +86,6 @@ class SearchFragment : Fragment(), TrackAdapter.ClickListener {
             is SearchState.History -> showHistory(state.tracks)
             is SearchState.ClearScreen -> showClearScreen()
         }
-
     }
 
     private fun showLoading() {
@@ -102,14 +105,14 @@ class SearchFragment : Fragment(), TrackAdapter.ClickListener {
 
     private fun showContent(tracks: List<Track>) {
         clearContent()
-        trackAdapter.clearTracks()
-        trackAdapter.tracks.addAll(tracks)
+        trackAdapter?.clearTracks()
+        trackAdapter?.tracks?.addAll(tracks)
         searchBinding.searchRecycler.visibility = View.VISIBLE
     }
 
     private fun showHistory (tracks: List<Track>) {
         clearContent()
-        historyAdapter.tracks = tracks as ArrayList<Track>
+        historyAdapter?.tracks = tracks as ArrayList<Track>
         searchBinding.historyLayout.visibility = View.VISIBLE
     }
 
@@ -142,6 +145,16 @@ class SearchFragment : Fragment(), TrackAdapter.ClickListener {
 
     override fun onResume() {
         super.onResume()
-        historyAdapter.tracks = viewModel.getHistory()
+        historyAdapter?.tracks = viewModel.getHistory()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        trackAdapter = null
+        historyAdapter = null
+    }
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
