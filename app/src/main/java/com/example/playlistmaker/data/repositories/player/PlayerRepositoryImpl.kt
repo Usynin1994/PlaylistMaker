@@ -1,10 +1,17 @@
 package com.example.playlistmaker.data.repositories.player
 
 import android.media.MediaPlayer
+import com.example.playlistmaker.data.DatabaseClient
+import com.example.playlistmaker.data.SharedPreferencesClient
 import com.example.playlistmaker.domain.api.player.PlayerRepository
 import com.example.playlistmaker.domain.model.PlayerState
+import com.example.playlistmaker.domain.model.Track
+import kotlinx.coroutines.flow.Flow
 
-class PlayerRepositoryImpl (private val mediaPlayer: MediaPlayer): PlayerRepository {
+class PlayerRepositoryImpl (private val mediaPlayer: MediaPlayer,
+                            private val spClient: SharedPreferencesClient,
+                            private val databaseClient: DatabaseClient
+): PlayerRepository {
 
     private var stateCallback: ((PlayerState) -> Unit)? = null
 
@@ -38,4 +45,18 @@ class PlayerRepositoryImpl (private val mediaPlayer: MediaPlayer): PlayerReposit
     override fun setOnStateChangeListener(callback: (PlayerState) -> Unit) {
         stateCallback = callback
     }
+
+    override fun getTrack(): Track {
+        return spClient.getTrack()
+    }
+
+    override suspend fun insertToFavorites(track: Track) {
+        databaseClient.insertToFavorites(track)
+    }
+
+    override suspend fun deleteFromFavorites(track: Track) {
+        databaseClient.deleteFromFavorites(track)
+    }
+
+    override suspend fun getTracksId(): Flow<List<Int>> = databaseClient.getTracksId()
 }

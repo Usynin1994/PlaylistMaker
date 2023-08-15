@@ -17,4 +17,6 @@ interface SharedPreferencesClient {
     fun clearHistory ()
 
     fun getTrack() : Track
+
+    fun saveLastTrack(track: Track)
 }

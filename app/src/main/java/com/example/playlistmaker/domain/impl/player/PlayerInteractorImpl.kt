@@ -1,13 +1,12 @@
 package com.example.playlistmaker.domain.impl.player
 
-import com.example.playlistmaker.data.SharedPreferencesClient
 import com.example.playlistmaker.domain.api.player.PlayerInteractor
 import com.example.playlistmaker.domain.api.player.PlayerRepository
 import com.example.playlistmaker.domain.model.PlayerState
 import com.example.playlistmaker.domain.model.Track
+import kotlinx.coroutines.flow.Flow
 
-class PlayerInteractorImpl(private val repository: PlayerRepository,
-                           private val spClient: SharedPreferencesClient) : PlayerInteractor {
+class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInteractor {
     override fun preparePlayer(url: String) {
         repository.preparePlayer(url)
     }
@@ -31,6 +30,16 @@ class PlayerInteractorImpl(private val repository: PlayerRepository,
     }
 
     override fun getTrack(): Track {
-        return spClient.getTrack()
+        return repository.getTrack()
     }
+
+    override suspend fun insertToFavorites(track: Track) {
+        repository.insertToFavorites(track)
+    }
+
+    override suspend fun deleteFromFavorites(track: Track) {
+        repository.deleteFromFavorites(track)
+    }
+
+    override suspend fun getTracksId(): Flow<List<Int>> = repository.getTracksId()
 }

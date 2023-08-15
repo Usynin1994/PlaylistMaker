@@ -12,4 +12,6 @@ interface TrackRepository {
     fun getHistory() : ArrayList<Track>
 
     fun clearHistory ()
+
+    fun saveLastTrack(track: Track)
 }

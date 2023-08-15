@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.search.fragment
+package com.example.playlistmaker.ui.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.playlistmaker.domain.model.Track

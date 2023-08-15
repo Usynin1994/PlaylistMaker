@@ -47,12 +47,20 @@ class PlayerFragment : Fragment() {
             playerBinding.playerTrackTime.text = it
         }
 
+        viewModel.isFavorite.observe(viewLifecycleOwner) {
+            controlLikeButton(it)
+        }
+
         playerBinding.playButton.setOnClickListener {
             viewModel.onPlayClick()
         }
 
         playerBinding.goBack.setOnClickListener {
             findNavController().navigateUp()
+        }
+
+        playerBinding.likeButton.setOnClickListener{
+            viewModel.onLikeClick()
         }
     }
 
@@ -106,6 +114,14 @@ class PlayerFragment : Fragment() {
             .centerCrop()
             .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.player_image_corner_radius)))
             .into(playerBinding.playerTrackImage)
+    }
+
+    private fun controlLikeButton(isFavorite: Boolean) {
+        if (isFavorite) {
+            playerBinding.likeButton.setImageResource(R.drawable.heart)
+        } else {
+            playerBinding.likeButton.setImageResource(R.drawable.like_btn)
+        }
     }
 
     override fun onDestroyView() {

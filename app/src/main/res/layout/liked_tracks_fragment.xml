@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:name="@+id/likedTracks"
     >
 
     <LinearLayout
         style="@style/searchPlaceholderStyle"
         android:id="@+id/emptyMedia"
         android:layout_marginTop="@dimen/track_placeholder_marginTop"
+        android:visibility="gone"
         >
         <ImageView
             style="@style/imageNotFoundStyle"
@@ -21,5 +23,25 @@
             android:text="@string/empty_media"
             />
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/likedTracksRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:paddingLeft="13dp"
+        android:paddingTop="@dimen/layout_padding"
+        android:visibility="gone"
+        >
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="@dimen/progress_bar_size"
+        android:layout_height="@dimen/progress_bar_size"
+        android:layout_marginTop="@dimen/progress_bar_margin"
+        android:layout_gravity="center_horizontal"
+        android:indeterminateTint="@color/progress_bar_color"
+        android:visibility="gone" />
 
 </FrameLayout>

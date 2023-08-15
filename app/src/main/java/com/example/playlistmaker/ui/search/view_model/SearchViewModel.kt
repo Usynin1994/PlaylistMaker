@@ -97,6 +97,10 @@ class SearchViewModel (private val trackInteractor: TrackInteractor): ViewModel(
 
     fun getHistory() = trackInteractor.getHistory()
 
+    fun saveLastTrack(track: Track) {
+        trackInteractor.saveLastTrack(track)
+    }
+
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
