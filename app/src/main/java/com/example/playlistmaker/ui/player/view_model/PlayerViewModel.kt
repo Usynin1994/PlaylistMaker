@@ -1,65 +1,70 @@
 package com.example.playlistmaker.ui.player.view_model
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.player.PlayerInteractor
 import com.example.playlistmaker.domain.model.PlayerState
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.formatAsTime
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 class PlayerViewModel (private val playerInteractor: PlayerInteractor): ViewModel() {
 
+    private var timerJob: Job? = null
+
+    private val _stateLiveData = MutableLiveData<PlayerState>()
+    val stateLiveData: LiveData<PlayerState> = _stateLiveData
+
+    private val _timeLiveData = MutableLiveData<String>()
+    val timeLiveData : LiveData<String> = _timeLiveData
+
+    private val _trackLiveData = MutableLiveData<Track>()
+    val trackLiveData: LiveData<Track> = _trackLiveData
+
     init {
         playerInteractor.setOnStateChangeListener { state ->
-            stateLiveData.postValue(state)
-            if (state == PlayerState.STATE_COMPLETE) handler.removeCallbacks(time)
+            _stateLiveData.postValue(state)
+            if (state == PlayerState.STATE_COMPLETE) timerJob?.cancel()
+        }
+        prepare()
+    }
+
+    private fun startTimer () {
+        timerJob = viewModelScope.launch {
+            while(isActive) {
+                delay(TRACK_TIME_DELAY)
+                _timeLiveData.postValue(playerInteractor.getPosition().formatAsTime())
+            }
         }
     }
 
-    private val handler = Handler(Looper.getMainLooper())
-
-    private val time = object : Runnable {override fun run() {
-        val position = playerInteractor.getPosition()
-        timeLiveData.postValue(position.formatAsTime())
-        handler.postDelayed(this, TRACK_TIME_DELAY)
-        }
-    }
-
-    private val stateLiveData = MutableLiveData<PlayerState>()
-    fun observeState(): LiveData<PlayerState> = stateLiveData
-
-    private val timeLiveData = MutableLiveData<String>()
-    fun observeTime(): LiveData<String> = timeLiveData
-
-    private val trackLiveData = MutableLiveData<Track>()
-    fun observeTrack(): LiveData<Track> = trackLiveData
-
-    fun prepare () {
-        handler.removeCallbacks(time)
+    private fun prepare () {
         playerInteractor.getTrack().previewUrl?.let { playerInteractor.preparePlayer(it) }
-        trackLiveData.postValue(playerInteractor.getTrack())
+        _trackLiveData.postValue(playerInteractor.getTrack())
     }
 
-    fun play () {
+    private fun play () {
         playerInteractor.startPlayer()
-        handler.post(time)
+        startTimer()
     }
 
     fun pause () {
+        timerJob?.cancel()
         playerInteractor.pausePlayer()
-        handler.removeCallbacks(time)
     }
 
     fun reset () {
+        timerJob?.cancel()
         playerInteractor.reset()
-        handler.removeCallbacks(time)
     }
 
     fun onPlayClick () {
-        when (stateLiveData.value) {
+        when (_stateLiveData.value) {
             PlayerState.STATE_PLAYING -> pause()
             else -> play()
         }

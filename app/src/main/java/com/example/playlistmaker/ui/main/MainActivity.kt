@@ -8,7 +8,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMainBinding
 
-
 class MainActivity : AppCompatActivity() {
 
     private val mainBinding: ActivityMainBinding by lazy {
