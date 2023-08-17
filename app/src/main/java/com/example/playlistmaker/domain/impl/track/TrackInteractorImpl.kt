@@ -34,4 +34,8 @@ class TrackInteractorImpl (private val repository: TrackRepository): TrackIntera
         repository.clearHistory()
     }
 
+    override fun saveLastTrack(track: Track) {
+        repository.saveLastTrack(track)
+    }
+
 }

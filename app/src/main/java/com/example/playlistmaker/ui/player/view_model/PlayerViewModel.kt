@@ -17,6 +17,8 @@ class PlayerViewModel (private val playerInteractor: PlayerInteractor): ViewMode
 
     private var timerJob: Job? = null
 
+    private var track: Track? = null
+
     private val _stateLiveData = MutableLiveData<PlayerState>()
     val stateLiveData: LiveData<PlayerState> = _stateLiveData
 
@@ -25,6 +27,9 @@ class PlayerViewModel (private val playerInteractor: PlayerInteractor): ViewMode
 
     private val _trackLiveData = MutableLiveData<Track>()
     val trackLiveData: LiveData<Track> = _trackLiveData
+
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val isFavorite: LiveData<Boolean> = _isFavorite
 
     init {
         playerInteractor.setOnStateChangeListener { state ->
@@ -44,8 +49,14 @@ class PlayerViewModel (private val playerInteractor: PlayerInteractor): ViewMode
     }
 
     private fun prepare () {
-        playerInteractor.getTrack().previewUrl?.let { playerInteractor.preparePlayer(it) }
-        _trackLiveData.postValue(playerInteractor.getTrack())
+        track = playerInteractor.getTrack()
+        viewModelScope.launch {
+            track?.previewUrl?.let { playerInteractor.preparePlayer(it) }
+            playerInteractor.getTracksId().collect {
+                track?.trackId?.let { id -> _isFavorite.postValue(it.contains(id)) }
+            }
+            track?.let { _trackLiveData.postValue(it) }
+        }
     }
 
     private fun play () {
@@ -67,6 +78,28 @@ class PlayerViewModel (private val playerInteractor: PlayerInteractor): ViewMode
         when (_stateLiveData.value) {
             PlayerState.STATE_PLAYING -> pause()
             else -> play()
+        }
+    }
+
+    fun onLikeClick() {
+        if (_isFavorite.value == true) {
+            track?.let { deleteFromFavorites(it) }
+        } else {
+            track?.let { insertToFavorites(it) }
+        }
+    }
+
+    private fun insertToFavorites(track: Track) {
+        viewModelScope.launch {
+            playerInteractor.insertToFavorites(track)
+            _isFavorite.postValue(true)
+        }
+    }
+
+    private fun deleteFromFavorites(track: Track) {
+        viewModelScope.launch {
+            playerInteractor.deleteFromFavorites(track)
+            _isFavorite.postValue(false)
         }
     }
 

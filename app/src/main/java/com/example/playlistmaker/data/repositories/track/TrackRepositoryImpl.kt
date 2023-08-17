@@ -7,6 +7,7 @@ import com.example.playlistmaker.data.dto.TrackSearchResponse
 import com.example.playlistmaker.domain.api.search.TrackRepository
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.Resource
+import com.example.playlistmaker.util.toTrack
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -22,18 +23,7 @@ class TrackRepositoryImpl (private val networkClient: NetworkClient,
             }
             200 -> {
                 with (response as TrackSearchResponse) {
-                    val data = results.map {
-                        Track(it.artistName,
-                            it.artworkUrl100,
-                            it.country,
-                            it.previewUrl,
-                            it.primaryGenreName,
-                            it.releaseDate,
-                            it.trackId,
-                            it.trackName,
-                            it.trackTimeMillis,
-                            it.collectionName)
-                    }
+                    val data = results.map { it.toTrack() }
                     emit(Resource.Success(data))
                 }
             }
@@ -51,4 +41,8 @@ class TrackRepositoryImpl (private val networkClient: NetworkClient,
     }
 
     override fun clearHistory () { spClient.clearHistory()}
+
+    override fun saveLastTrack(track: Track) {
+        spClient.saveLastTrack(track)
+    }
 }

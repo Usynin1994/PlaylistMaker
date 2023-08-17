@@ -14,10 +14,10 @@ val playerViewModelModule = module {
         PlayerViewModel(get())
     }
     factory<PlayerInteractor> {
-        PlayerInteractorImpl(get(), get())
+        PlayerInteractorImpl(get())
     }
     single<PlayerRepository> {
-        PlayerRepositoryImpl(get())
+        PlayerRepositoryImpl(get(), get(), get())
     }
     single<MediaPlayer> {
         MediaPlayer()

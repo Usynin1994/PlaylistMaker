@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.ui.adapter.TrackAdapter
 import com.example.playlistmaker.ui.search.SearchState
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.util.debounce
@@ -22,8 +23,8 @@ class SearchFragment : Fragment(), TrackAdapter.ClickListener {
 
     private lateinit var searchBinding: FragmentSearchBinding
 
-    private var trackAdapter:TrackAdapter? = null
-    private var historyAdapter:TrackAdapter? = null
+    private var trackAdapter: TrackAdapter? = null
+    private var historyAdapter: TrackAdapter? = null
 
     private lateinit var onTrackClickDebounce: (Track) -> Unit
 
@@ -74,6 +75,7 @@ class SearchFragment : Fragment(), TrackAdapter.ClickListener {
         }
     }
     override fun onClick (track: Track) {
+        viewModel.saveLastTrack(track)
         onTrackClickDebounce(track)
     }
 
