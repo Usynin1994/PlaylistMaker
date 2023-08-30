@@ -3,6 +3,7 @@ package com.example.playlistmaker.domain.impl.player
 import com.example.playlistmaker.domain.api.player.PlayerInteractor
 import com.example.playlistmaker.domain.api.player.PlayerRepository
 import com.example.playlistmaker.domain.model.PlayerState
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
@@ -42,4 +43,10 @@ class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInt
     }
 
     override suspend fun getTracksId(): Flow<List<Int>> = repository.getTracksId()
+
+    override suspend fun getPlaylists(): Flow<List<Playlist>> = repository.getPlaylists()
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        repository.updatePlaylist(playlist)
+    }
 }

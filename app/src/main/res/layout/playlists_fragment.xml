@@ -1,25 +1,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:name="@+id/playlists"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:name="@+id/playlists"
-
-    >
+    android:orientation="vertical">
 
     <Button
+        android:id="@+id/buttonNewPlaylist"
         style="@style/buttonReloadStyle"
-        android:id="@+id/buttonReload"
-        android:text="@string/new_playlist"
         android:layout_marginTop="@dimen/search_placeholder_margin"
-        />
+        android:text="@string/new_playlist" />
 
     <TextView
         android:id="@+id/emptyPlaylist"
-        style = "@style/textErrorStyle"
+        style="@style/textErrorStyle"
         android:layout_marginTop="@dimen/player_image_margin"
         android:text="@string/empty_playlists"
-        android:visibility="visible"
-        app:drawableTopCompat="@drawable/not_found"/>
+        android:visibility="gone"
+        app:drawableTopCompat="@drawable/not_found" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlistsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="@dimen/layout_padding"
+        android:visibility="gone"
+        >
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="@dimen/progress_bar_size"
+        android:layout_height="@dimen/progress_bar_size"
+        android:layout_marginTop="@dimen/progress_bar_margin"
+        android:layout_gravity="center_horizontal"
+        android:indeterminateTint="@color/progress_bar_color"
+        android:visibility="gone" />
+
 
 </LinearLayout>

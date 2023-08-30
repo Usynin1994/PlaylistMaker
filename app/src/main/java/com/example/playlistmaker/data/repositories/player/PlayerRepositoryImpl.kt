@@ -5,6 +5,7 @@ import com.example.playlistmaker.data.DatabaseClient
 import com.example.playlistmaker.data.SharedPreferencesClient
 import com.example.playlistmaker.domain.api.player.PlayerRepository
 import com.example.playlistmaker.domain.model.PlayerState
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
@@ -59,4 +60,10 @@ class PlayerRepositoryImpl (private val mediaPlayer: MediaPlayer,
     }
 
     override suspend fun getTracksId(): Flow<List<Int>> = databaseClient.getTracksId()
+
+    override suspend fun getPlaylists(): Flow<List<Playlist>> = databaseClient.getPlaylists()
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        databaseClient.updatePlaylist(playlist)
+    }
 }

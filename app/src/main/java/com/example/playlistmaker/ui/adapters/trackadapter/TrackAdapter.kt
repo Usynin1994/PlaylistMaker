@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.adapter
+package com.example.playlistmaker.ui.adapters.trackadapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Track
 
 
-class TrackAdapter (val listener: ClickListener): RecyclerView.Adapter<TrackViewHolder> () {
+class TrackAdapter (private val listener: ClickListener): RecyclerView.Adapter<TrackViewHolder> () {
 
     internal var tracks = ArrayList<Track>()
         set(newValue) {

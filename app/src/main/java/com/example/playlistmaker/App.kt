@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.di.mediaModule
 import com.example.playlistmaker.di.playerViewModelModule
+import com.example.playlistmaker.di.playlistCreatorViewModelModule
 import com.example.playlistmaker.di.searchViewModelModule
 import com.example.playlistmaker.di.settingViewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -25,7 +26,8 @@ class App : Application() {
                 settingViewModelModule,
                 playerViewModelModule,
                 searchViewModelModule,
-                mediaModule
+                mediaModule,
+                playlistCreatorViewModelModule
             )
         }
 

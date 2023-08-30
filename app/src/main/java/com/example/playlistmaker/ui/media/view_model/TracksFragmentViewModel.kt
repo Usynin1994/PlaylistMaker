@@ -3,20 +3,24 @@ package com.example.playlistmaker.ui.media.view_model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.domain.api.media.MediaInteractor
+import com.example.playlistmaker.domain.api.media.FavoriteTrackInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.media.LikedTracksState
 import kotlinx.coroutines.launch
 
-class TracksFragmentViewModel(private val mediaInteractor: MediaInteractor) : ViewModel() {
+class TracksFragmentViewModel(
+    private val favoriteTrackInteractor: FavoriteTrackInteractor) : ViewModel() {
 
     private val _stateLiveData = MutableLiveData<LikedTracksState>()
     val stateLiveData = _stateLiveData
 
-    fun fillData() {
+    init {
         renderState(LikedTracksState.Loading)
+    }
+
+    fun fillData() {
         viewModelScope.launch {
-            mediaInteractor.getTracks().collect {
+            favoriteTrackInteractor.getTracks().collect {
                 processResult(it)
             }
         }
@@ -35,6 +39,6 @@ class TracksFragmentViewModel(private val mediaInteractor: MediaInteractor) : Vi
     }
 
     fun saveLastTrack(track: Track) {
-        mediaInteractor.saveLastTrack(track)
+        favoriteTrackInteractor.saveLastTrack(track)
     }
 }

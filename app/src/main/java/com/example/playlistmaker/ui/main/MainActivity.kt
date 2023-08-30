@@ -18,22 +18,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(mainBinding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.containerView) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.containerView) as NavHostFragment
         val navController = navHostFragment.navController
 
         mainBinding.bottomNavigationView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.playerFragment -> {
-                    mainBinding.bottomNavigationView.visibility = View.GONE
-                    mainBinding.border.visibility = View.GONE
-                }
+                R.id.playerFragment -> hideNavigationView()
+
+                R.id.playlistCreator -> hideNavigationView()
+
                 else -> {
                     mainBinding.bottomNavigationView.visibility = View.VISIBLE
                     mainBinding.border.visibility = View.VISIBLE
                 }
             }
         }
+    }
+
+    private fun hideNavigationView() {
+        mainBinding.bottomNavigationView.visibility = View.GONE
+        mainBinding.border.visibility = View.GONE
     }
 }

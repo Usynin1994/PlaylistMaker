@@ -3,10 +3,11 @@ package com.example.playlistmaker.domain.api.media
 import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
-interface MediaInteractor {
+interface FavoriteTrackRepository {
+
     suspend fun getTracks(): Flow<List<Track>>
 
-    suspend fun insertToFavorites(track: Track)
+    suspend fun addToFavorites(track: Track)
 
     suspend fun deleteFromFavorites(track: Track)
 

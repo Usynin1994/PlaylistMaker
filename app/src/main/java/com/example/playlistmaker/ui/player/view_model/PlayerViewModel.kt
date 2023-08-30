@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.player.PlayerInteractor
 import com.example.playlistmaker.domain.model.PlayerState
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.formatAsTime
 import kotlinx.coroutines.Job
@@ -30,6 +31,9 @@ class PlayerViewModel (private val playerInteractor: PlayerInteractor): ViewMode
 
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> = _isFavorite
+
+    private val _playlists = MutableLiveData<List<Playlist>>()
+    val playlists: LiveData<List<Playlist>> = _playlists
 
     init {
         playerInteractor.setOnStateChangeListener { state ->
@@ -86,6 +90,18 @@ class PlayerViewModel (private val playerInteractor: PlayerInteractor): ViewMode
             track?.let { deleteFromFavorites(it) }
         } else {
             track?.let { insertToFavorites(it) }
+        }
+    }
+
+    fun updatePlaylist(playlist: Playlist) {
+        viewModelScope.launch { playerInteractor.updatePlaylist(playlist) }
+    }
+
+    fun fillData() {
+        viewModelScope.launch {
+            playerInteractor.getPlaylists().collect {
+                _playlists.postValue(it)
+            }
         }
     }
 

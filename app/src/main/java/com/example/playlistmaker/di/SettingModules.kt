@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.example.playlistmaker.SHARED_PREFS
 import com.example.playlistmaker.data.SharedPreferencesClient
-import com.example.playlistmaker.data.repositories.media.MediaRepositoryImpl
+import com.example.playlistmaker.data.repositories.media.FavoriteTrackRepositoryImpl
 import com.example.playlistmaker.data.repositories.player.PlayerRepositoryImpl
 import com.example.playlistmaker.data.repositories.setting.SettingRepositoryImpl
 import com.example.playlistmaker.data.repositories.track.TrackRepositoryImpl
@@ -36,7 +36,7 @@ val settingViewModelModule = module {
     } binds(arrayOf(TrackRepositoryImpl::class,
         SettingRepositoryImpl::class,
         PlayerRepositoryImpl::class,
-        MediaRepositoryImpl::class))
+        FavoriteTrackRepositoryImpl::class))
 
     single<SharedPreferences> {
         androidContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)

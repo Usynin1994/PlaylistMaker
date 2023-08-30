@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.LikedTracksFragmentBinding
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.ui.adapter.TrackAdapter
+import com.example.playlistmaker.ui.adapters.trackadapter.TrackAdapter
 import com.example.playlistmaker.ui.media.LikedTracksState
 import com.example.playlistmaker.ui.media.view_model.TracksFragmentViewModel
 import com.example.playlistmaker.util.debounce
@@ -21,14 +21,15 @@ class TracksFragment : Fragment(), TrackAdapter.ClickListener {
     private val viewModel by viewModel<TracksFragmentViewModel>()
     private var trackAdapter: TrackAdapter? = null
 
-    private lateinit var binding: LikedTracksFragmentBinding
+    private var _binding: LikedTracksFragmentBinding? = null
+    private val binding get() = _binding!!
     private lateinit var onTrackClickDebounce: (Track) -> Unit
 
     override fun onCreateView(inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = LikedTracksFragmentBinding.inflate(inflater, container, false)
+        _binding = LikedTracksFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -69,8 +70,7 @@ class TracksFragment : Fragment(), TrackAdapter.ClickListener {
 
     private fun showContent(tracks: List<Track>){
         clearContent()
-        trackAdapter?.clearTracks()
-        trackAdapter?.tracks?.addAll(tracks)
+        trackAdapter?.tracks = tracks as ArrayList<Track>
         binding.likedTracksRecycler.visibility = View.VISIBLE
     }
 
