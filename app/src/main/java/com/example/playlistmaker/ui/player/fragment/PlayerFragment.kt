@@ -177,7 +177,7 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ClickListener {
     }
 
     override fun onClick(playlist: Playlist) {
-        if (playlist.tracks.isNotEmpty() && playlist.tracks[0].trackId == track?.trackId) {
+        if (playlist.tracks.contains(track)) {
             Toast.makeText(
                 requireContext(),
                 getString(R.string.track_already_added_to_playlist, playlist.name),
