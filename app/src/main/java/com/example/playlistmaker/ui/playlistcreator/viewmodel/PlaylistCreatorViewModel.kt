@@ -1,12 +1,11 @@
 package com.example.playlistmaker.ui.playlistcreator.viewmodel
 
 import android.net.Uri
-import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.playlistcreator.PlaylistCreatorInteractor
 import com.example.playlistmaker.domain.model.Playlist
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PlaylistCreatorViewModel (
@@ -29,7 +28,7 @@ class PlaylistCreatorViewModel (
         }
 
     fun saveToPrivateStorage(uri: Uri) {
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO){
             creatorInteractor.saveImageToPrivateStorage(uri)
         }
     }

@@ -116,7 +116,7 @@ class PlaylistCreatorFragment : Fragment() {
             }
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (imageUri != null ||
                     !binding.editTextPlaylistTitle.text.isNullOrEmpty() ||
