@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.playlistcreator.viewmodel
 
+import android.net.Uri
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModel
@@ -16,4 +17,20 @@ class PlaylistCreatorViewModel (
                 creatorInteractor.insertPlaylist(playlist)
             }
         }
+
+        fun insertPlaylist(name: String, image: Uri?, descreption: String) {
+            viewModelScope.launch {
+                creatorInteractor.insertPlaylist(
+                    Playlist(name = name,
+                        image = image,
+                        description = descreption)
+                )
+            }
+        }
+
+    fun saveToPrivateStorage(uri: Uri) {
+        viewModelScope.launch {
+            creatorInteractor.saveImageToPrivateStorage(uri)
+        }
+    }
 }

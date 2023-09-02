@@ -1,15 +1,13 @@
 package com.example.playlistmaker.ui.playlistcreator.fragment
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -18,12 +16,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
-import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.ui.playlistcreator.viewmodel.PlaylistCreatorViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
-import java.io.FileOutputStream
 
 class PlaylistCreatorFragment : Fragment() {
 
@@ -96,16 +91,15 @@ class PlaylistCreatorFragment : Fragment() {
         }
 
         binding.buttonCreatePlaylist.setOnClickListener {
-            val playlist = Playlist(
-                name = binding.editTextPlaylistTitle.text.toString(),
-                image = imageUri,
-                description = binding.editTextPlaylistDescription.text.toString())
-            viewModel.insertPlaylist(playlist)
-            imageUri?.let {saveImageToPrivateStorage(it)}
+            viewModel.insertPlaylist(binding.editTextPlaylistTitle.text.toString(),
+                imageUri,
+                binding.editTextPlaylistDescription.text.toString()
+                )
+            imageUri?.let {viewModel.saveToPrivateStorage(it)}
 
             Toast.makeText(
                 requireContext(),
-                getString(R.string.playlist_created, playlist.name),
+                getString(R.string.playlist_created, binding.editTextPlaylistTitle.text.toString()),
                 Toast.LENGTH_LONG
             ).show()
 
@@ -121,24 +115,17 @@ class PlaylistCreatorFragment : Fragment() {
                 findNavController().navigateUp()
             }
         }
-    }
 
-    private fun saveImageToPrivateStorage(uri: Uri) {
-        val filePath = File(
-            requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            DIRECTORY
-        )
-        if (!filePath.exists()){
-            filePath.mkdirs()
-        }
-        val file = File(filePath, uri.lastPathSegment.toString())
-        val inputStream = requireActivity().contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
-        BitmapFactory
-            .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-    }
-    companion object {
-        const val DIRECTORY = "playlist"
+        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (imageUri != null ||
+                    !binding.editTextPlaylistTitle.text.isNullOrEmpty() ||
+                    !binding.editTextPlaylistDescription.text.isNullOrEmpty()) {
+                    confirmDialog.show()
+                } else {
+                    findNavController().navigateUp()
+                }
+            }
+        })
     }
 }
