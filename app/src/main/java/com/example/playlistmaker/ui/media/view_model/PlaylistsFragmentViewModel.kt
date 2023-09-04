@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.media.PlaylistInteractor
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.ui.media.PlaylistState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PlaylistsFragmentViewModel (
@@ -19,7 +20,7 @@ class PlaylistsFragmentViewModel (
     }
 
     fun fillData() {
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO) {
             playlistInteractor.getPlaylists().collect {
                 processResult(it)
             }

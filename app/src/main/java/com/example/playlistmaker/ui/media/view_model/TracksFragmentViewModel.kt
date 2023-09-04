@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.media.FavoriteTrackInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.media.LikedTracksState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TracksFragmentViewModel(
@@ -19,7 +20,7 @@ class TracksFragmentViewModel(
     }
 
     fun fillData() {
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO) {
             favoriteTrackInteractor.getTracks().collect {
                 processResult(it)
             }

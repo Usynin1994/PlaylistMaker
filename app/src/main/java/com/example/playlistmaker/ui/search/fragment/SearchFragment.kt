@@ -155,6 +155,7 @@ class SearchFragment : Fragment(), TrackAdapter.ClickListener {
         super.onDestroyView()
         trackAdapter = null
         historyAdapter = null
+        _searchBinding = null
     }
 
     companion object {

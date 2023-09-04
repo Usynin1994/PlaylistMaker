@@ -89,6 +89,11 @@ class TracksFragment : Fragment(), TrackAdapter.ClickListener {
         onTrackClickDebounce(track)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     companion object {
         fun newInstanse() = TracksFragment()
         private const val CLICK_DEBOUNCE_DELAY = 1000L

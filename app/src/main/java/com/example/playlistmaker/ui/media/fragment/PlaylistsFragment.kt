@@ -93,6 +93,11 @@ class PlaylistsFragment : Fragment(), PlaylistAdapter.ClickListener {
         //Возможно что-то будет здесь
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     companion object {
         fun newInstanse() = PlaylistsFragment()
         const val SPAN_COUNT = 2

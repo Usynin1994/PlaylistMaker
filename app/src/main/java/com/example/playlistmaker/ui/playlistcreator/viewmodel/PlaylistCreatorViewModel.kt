@@ -8,27 +8,24 @@ import com.example.playlistmaker.domain.model.Playlist
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PlaylistCreatorViewModel (
-    private val creatorInteractor: PlaylistCreatorInteractor): ViewModel() {
+class PlaylistCreatorViewModel(
+    private val creatorInteractor: PlaylistCreatorInteractor
+) : ViewModel() {
 
-        fun insertPlaylist(playlist: Playlist) {
-            viewModelScope.launch {
-                creatorInteractor.insertPlaylist(playlist)
-            }
-        }
-
-        fun insertPlaylist(name: String, image: Uri?, descreption: String) {
-            viewModelScope.launch {
-                creatorInteractor.insertPlaylist(
-                    Playlist(name = name,
-                        image = image,
-                        description = descreption)
+    fun insertPlaylist(name: String, image: Uri?, description: String) {
+        viewModelScope.launch (Dispatchers.IO) {
+            creatorInteractor.insertPlaylist(
+                Playlist(
+                    name = name,
+                    image = image,
+                    description = description
                 )
-            }
+            )
         }
+    }
 
     fun saveToPrivateStorage(uri: Uri) {
-        viewModelScope.launch (Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             creatorInteractor.saveImageToPrivateStorage(uri)
         }
     }

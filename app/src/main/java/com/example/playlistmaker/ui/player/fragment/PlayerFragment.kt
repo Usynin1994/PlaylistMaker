@@ -18,6 +18,7 @@ import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.adapters.playlistadapter.PlaylistAdapter
 import com.example.playlistmaker.ui.adapters.playlistadapter.CardObjects
+import com.example.playlistmaker.ui.player.AvailabilityInfo
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.util.formatAsTime
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -28,8 +29,6 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ClickListener {
     private val viewModel: PlayerViewModel by viewModel()
 
     private var playlistAdapter: PlaylistAdapter? = null
-
-    private var track: Track? = null
 
     private var _playerBinding: FragmentPlayerBinding? = null
     private val playerBinding get() = _playerBinding!!
@@ -50,17 +49,19 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        playerBinding.backgroundDimLayout.alpha = 0f
+        playerBinding.backgroundDimLayout.alpha = ALPHA_START
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED, BottomSheetBehavior.STATE_COLLAPSED,
                     BottomSheetBehavior.STATE_DRAGGING, BottomSheetBehavior.STATE_SETTLING-> {
-                        playerBinding.backgroundDimLayout.animate().alpha(0.7f).setDuration(300).start()
+                        playerBinding.backgroundDimLayout.animate().alpha(ALPHA_END).setDuration(
+                            ANIMATION_TIME).start()
                     }
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        playerBinding.backgroundDimLayout.animate().alpha(0f).setDuration(300).start()
+                        playerBinding.backgroundDimLayout.animate().alpha(ALPHA_START).setDuration(
+                            ANIMATION_TIME).start()
                         viewModel.fillData()
                     }
                     else -> {  }
@@ -78,7 +79,6 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ClickListener {
 
         viewModel.trackLiveData.observe(viewLifecycleOwner) {
             drawPlayer(it)
-            track = it
         }
 
         viewModel.stateLiveData.observe(viewLifecycleOwner) { state ->
@@ -95,6 +95,10 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ClickListener {
 
         viewModel.playlists.observe(viewLifecycleOwner) {
             playlistAdapter?.playlists = it as ArrayList<Playlist>
+        }
+
+        viewModel.isInPlaylist.observe(viewLifecycleOwner) {
+            showNotification(it)
         }
 
         playerBinding.addToMediaButton.setOnClickListener {
@@ -177,20 +181,27 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ClickListener {
     }
 
     override fun onClick(playlist: Playlist) {
-        if (playlist.tracks.contains(track)) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.track_already_added_to_playlist, playlist.name),
-                Toast.LENGTH_SHORT).show()
-        } else {
-            track?.let{track -> playlist.tracks.add(FIRST, track)}
-            viewModel.updatePlaylist(playlist)
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            viewModel.fillData()
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.added_to_playlist, playlist.name),
-                Toast.LENGTH_SHORT).show()
+        viewModel.addToPlaylist(playlist.id)
+    }
+
+    private fun showNotification(data: AvailabilityInfo) {
+        when (data) {
+            is AvailabilityInfo.NoNotification -> {}
+            is AvailabilityInfo.AvailabilityData -> {
+                if (data.isInPlaylist) {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.track_already_added_to_playlist, data.playlistName),
+                        Toast.LENGTH_SHORT).show()
+                } else {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    viewModel.fillData()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.added_to_playlist, data.playlistName),
+                        Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -198,6 +209,7 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ClickListener {
         super.onDestroyView()
         viewModel.reset()
         playlistAdapter = null
+        _playerBinding = null
     }
 
     override fun onPause() {
@@ -206,6 +218,8 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ClickListener {
     }
 
     companion object {
-        const val FIRST = 0
+        const val ANIMATION_TIME = 300L
+        const val ALPHA_START = 0f
+        const val ALPHA_END = 0.7f
     }
 }
