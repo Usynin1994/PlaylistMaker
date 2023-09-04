@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.ui.adapter.TrackAdapter
+import com.example.playlistmaker.ui.adapters.trackadapter.TrackAdapter
 import com.example.playlistmaker.ui.search.SearchState
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.util.debounce
@@ -21,7 +21,8 @@ class SearchFragment : Fragment(), TrackAdapter.ClickListener {
 
     private val viewModel: SearchViewModel by viewModel()
 
-    private lateinit var searchBinding: FragmentSearchBinding
+    private var _searchBinding: FragmentSearchBinding? = null
+    private val searchBinding get() = _searchBinding!!
 
     private var trackAdapter: TrackAdapter? = null
     private var historyAdapter: TrackAdapter? = null
@@ -33,7 +34,7 @@ class SearchFragment : Fragment(), TrackAdapter.ClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        searchBinding = FragmentSearchBinding.inflate(inflater, container, false)
+        _searchBinding = FragmentSearchBinding.inflate(inflater, container, false)
         return searchBinding.root
     }
 
@@ -154,6 +155,7 @@ class SearchFragment : Fragment(), TrackAdapter.ClickListener {
         super.onDestroyView()
         trackAdapter = null
         historyAdapter = null
+        _searchBinding = null
     }
 
     companion object {

@@ -16,14 +16,15 @@ class SettingFragment : Fragment() {
 
     private val viewModel: SettingViewModel by viewModel()
 
-    private lateinit var settingBinding: FragmentSettingBinding
+    private var _settingBinding: FragmentSettingBinding? = null
+    private val settingBinding get() = _settingBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        settingBinding = FragmentSettingBinding.inflate(inflater, container, false)
+        _settingBinding = FragmentSettingBinding.inflate(inflater, container, false)
         return settingBinding.root
     }
 
@@ -58,5 +59,10 @@ class SettingFragment : Fragment() {
                 viewModel.setDarkMode(isChecked)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _settingBinding = null
     }
 }

@@ -4,36 +4,78 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.model.PlayerState
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.ui.adapters.playlistadapter.PlaylistAdapter
+import com.example.playlistmaker.ui.adapters.playlistadapter.CardObjects
+import com.example.playlistmaker.ui.player.AvailabilityInfo
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.util.formatAsTime
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlayerFragment : Fragment() {
+class PlayerFragment : Fragment(), PlaylistAdapter.ClickListener {
 
     private val viewModel: PlayerViewModel by viewModel()
 
-    private lateinit var playerBinding: FragmentPlayerBinding
+    private var playlistAdapter: PlaylistAdapter? = null
+
+    private var _playerBinding: FragmentPlayerBinding? = null
+    private val playerBinding get() = _playerBinding!!
+
+    private val bottomSheetBehavior get() = BottomSheetBehavior.from(playerBinding.standardBottomSheet).apply {
+        state = BottomSheetBehavior.STATE_HIDDEN
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        playerBinding = FragmentPlayerBinding.inflate(inflater, container, false)
+        _playerBinding = FragmentPlayerBinding.inflate(inflater, container, false)
         return playerBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        playerBinding.backgroundDimLayout.alpha = ALPHA_START
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED, BottomSheetBehavior.STATE_COLLAPSED,
+                    BottomSheetBehavior.STATE_DRAGGING, BottomSheetBehavior.STATE_SETTLING-> {
+                        playerBinding.backgroundDimLayout.animate().alpha(ALPHA_END).setDuration(
+                            ANIMATION_TIME).start()
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        playerBinding.backgroundDimLayout.animate().alpha(ALPHA_START).setDuration(
+                            ANIMATION_TIME).start()
+                        viewModel.fillData()
+                    }
+                    else -> {  }
+                }
+            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
+
+        playerBinding.playlistsRecycler.layoutManager = LinearLayoutManager(requireContext())
+        playlistAdapter = PlaylistAdapter(this, CardObjects.HORIZONTAL)
+        playerBinding.playlistsRecycler.adapter = playlistAdapter
+
+        viewModel.fillData()
 
         viewModel.trackLiveData.observe(viewLifecycleOwner) {
             drawPlayer(it)
@@ -51,6 +93,18 @@ class PlayerFragment : Fragment() {
             controlLikeButton(it)
         }
 
+        viewModel.playlists.observe(viewLifecycleOwner) {
+            playlistAdapter?.playlists = it as ArrayList<Playlist>
+        }
+
+        viewModel.isInPlaylist.observe(viewLifecycleOwner) {
+            showNotification(it)
+        }
+
+        playerBinding.addToMediaButton.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
         playerBinding.playButton.setOnClickListener {
             viewModel.onPlayClick()
         }
@@ -61,6 +115,10 @@ class PlayerFragment : Fragment() {
 
         playerBinding.likeButton.setOnClickListener{
             viewModel.onLikeClick()
+        }
+
+        playerBinding.buttonNewPlaylist.setOnClickListener {
+            findNavController().navigate(R.id.action_playerFragment_to_playlistCreator)
         }
     }
 
@@ -88,7 +146,6 @@ class PlayerFragment : Fragment() {
     private fun drawPlayer (track: Track) {
         with(playerBinding) {
 
-            // Отображаем информацию о треке
             playerTrackName.text = track.trackName
             playerTrackName.isSelected = true
             playerArtistName.text = track.artistName
@@ -98,7 +155,6 @@ class PlayerFragment : Fragment() {
             trackGenre.text = track.primaryGenreName
             trackCountry.text = track.country
 
-            //Отображение альбома
             if (track.collectionName.isNullOrEmpty()) {
                 albumName.visibility = View.GONE
                 trackAlbum.visibility = View.GONE
@@ -112,7 +168,7 @@ class PlayerFragment : Fragment() {
             .load(track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
             .placeholder(R.drawable.placeholder_big)
             .centerCrop()
-            .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.player_image_corner_radius)))
+            .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.corner_radius_8)))
             .into(playerBinding.playerTrackImage)
     }
 
@@ -124,13 +180,46 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    override fun onClick(playlist: Playlist) {
+        viewModel.addToPlaylist(playlist.id)
+    }
+
+    private fun showNotification(data: AvailabilityInfo) {
+        when (data) {
+            is AvailabilityInfo.NoNotification -> {}
+            is AvailabilityInfo.AvailabilityData -> {
+                if (data.isInPlaylist) {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.track_already_added_to_playlist, data.playlistName),
+                        Toast.LENGTH_SHORT).show()
+                } else {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    viewModel.fillData()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.added_to_playlist, data.playlistName),
+                        Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         viewModel.reset()
+        playlistAdapter = null
+        _playerBinding = null
     }
 
     override fun onPause() {
         super.onPause()
         viewModel.pause()
+    }
+
+    companion object {
+        const val ANIMATION_TIME = 300L
+        const val ALPHA_START = 0f
+        const val ALPHA_END = 0.7f
     }
 }

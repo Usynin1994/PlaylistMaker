@@ -27,10 +27,22 @@
         <action
             android:id="@+id/action_mediaFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_mediaFragment_to_playlistCreator"
+            app:destination="@id/playlistCreator" />
     </fragment>
     <fragment
         android:id="@+id/playerFragment"
         android:name="com.example.playlistmaker.ui.player.fragment.PlayerFragment"
         android:label="fragment_player"
-        tools:layout="@layout/fragment_player" />
+        tools:layout="@layout/fragment_player" >
+        <action
+            android:id="@+id/action_playerFragment_to_playlistCreator"
+            app:destination="@id/playlistCreator" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistCreator"
+        android:name="com.example.playlistmaker.ui.playlistcreator.fragment.PlaylistCreatorFragment"
+        android:label="fragment_create_playlist"
+        tools:layout="@layout/fragment_create_playlist" />
 </navigation>

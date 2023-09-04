@@ -2,11 +2,11 @@ package com.example.playlistmaker.data.repositories.media
 
 import com.example.playlistmaker.data.DatabaseClient
 import com.example.playlistmaker.data.SharedPreferencesClient
-import com.example.playlistmaker.domain.api.media.MediaRepository
+import com.example.playlistmaker.domain.api.media.FavoriteTrackRepository
 import com.example.playlistmaker.domain.model.Track
 
-class MediaRepositoryImpl(private val databaseClient: DatabaseClient,
-                          private val spClient: SharedPreferencesClient): MediaRepository {
+class FavoriteTrackRepositoryImpl(private val databaseClient: DatabaseClient,
+                                  private val spClient: SharedPreferencesClient): FavoriteTrackRepository {
 
     override suspend fun getTracks() = databaseClient.getTracks()
 

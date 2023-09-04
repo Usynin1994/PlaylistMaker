@@ -7,6 +7,7 @@
     <dimen name="warning_text_size">19sp</dimen>
     <dimen name="reload_text_size">14sp</dimen>
     <dimen name="song_info_text_size">13sp</dimen>
+    <dimen name="playlist_card_main_text_size">12sp</dimen>
 
     <!-- Paddings -->
     <dimen name="main_screen_icon_padding">10dp</dimen>
@@ -31,7 +32,7 @@
     <dimen name="corner_radius">16dp</dimen>
     <dimen name="artist_image_corner_radius">2dp</dimen>
     <dimen name="search_buttons_corner_radius">54dp</dimen>
-    <dimen name="player_image_corner_radius">8dp</dimen>
+    <dimen name="corner_radius_8">8dp</dimen>
 
     <dimen name="floating_button_size">51dp</dimen>
     <dimen name="play_button_size">84dp</dimen>

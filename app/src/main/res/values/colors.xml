@@ -14,8 +14,8 @@
     <color name="black_main">#1A1B22</color>
     <color name="grey_main">#AEAFB4</color>
     <color name="grey_dark">#4D4D4D</color>
-    <color name="grey_search_background">#E6E8EB</color>
+    <color name="grey_lite">#E6E8EB</color>
     <color name="progress_bar_color">#6200EE</color>
-
+    <color name="overlay_color">#99000000</color>
 
 </resources>

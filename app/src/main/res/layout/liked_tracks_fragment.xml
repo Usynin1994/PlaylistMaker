@@ -41,7 +41,7 @@
         android:layout_height="@dimen/progress_bar_size"
         android:layout_marginTop="@dimen/progress_bar_margin"
         android:layout_gravity="center_horizontal"
-        android:indeterminateTint="@color/progress_bar_color"
+        android:indeterminateTint="@color/blue_main"
         android:visibility="gone" />
 
 </FrameLayout>

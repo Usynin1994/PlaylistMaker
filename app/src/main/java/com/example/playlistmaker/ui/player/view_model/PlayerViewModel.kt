@@ -6,8 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.player.PlayerInteractor
 import com.example.playlistmaker.domain.model.PlayerState
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.ui.player.AvailabilityInfo
 import com.example.playlistmaker.util.formatAsTime
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -30,6 +33,12 @@ class PlayerViewModel (private val playerInteractor: PlayerInteractor): ViewMode
 
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> = _isFavorite
+
+    private val _playlists = MutableLiveData<List<Playlist>>()
+    val playlists: LiveData<List<Playlist>> = _playlists
+
+    private var _isInPlaylist = MutableLiveData<AvailabilityInfo>()
+    val isInPlaylist: LiveData<AvailabilityInfo> = _isInPlaylist
 
     init {
         playerInteractor.setOnStateChangeListener { state ->
@@ -89,15 +98,44 @@ class PlayerViewModel (private val playerInteractor: PlayerInteractor): ViewMode
         }
     }
 
-    private fun insertToFavorites(track: Track) {
+    private fun updatePlaylist(playlist: Playlist) {
+        viewModelScope.launch (Dispatchers.IO) { playerInteractor.updatePlaylist(playlist) }
+    }
+
+    fun fillData() {
+        viewModelScope.launch (Dispatchers.IO) {
+            playerInteractor.getPlaylists().collect {
+                _playlists.postValue(it)
+            }
+        }
+    }
+
+    fun addToPlaylist(playlistId: Int) {
         viewModelScope.launch {
+            val playlist = playlists.value?.find { it.id == playlistId }
+            if (playlist?.tracks?.contains(track) == true) {
+                _isInPlaylist.value = AvailabilityInfo.AvailabilityData(true, playlist.name)
+                delay(TOAST_DELAY)
+                _isInPlaylist.value = AvailabilityInfo.NoNotification
+            } else {
+                track?.let { track -> playlist?.tracks?.add(FIRST, track) }
+                _isInPlaylist.value = playlist?.name?.let { AvailabilityInfo.AvailabilityData(false, it) }
+                playlist?.let { updatePlaylist(it) }
+                delay(TOAST_DELAY)
+                _isInPlaylist.value = AvailabilityInfo.NoNotification
+            }
+        }
+    }
+
+    private fun insertToFavorites(track: Track) {
+        viewModelScope.launch (Dispatchers.IO) {
             playerInteractor.insertToFavorites(track)
             _isFavorite.postValue(true)
         }
     }
 
     private fun deleteFromFavorites(track: Track) {
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO) {
             playerInteractor.deleteFromFavorites(track)
             _isFavorite.postValue(false)
         }
@@ -105,5 +143,7 @@ class PlayerViewModel (private val playerInteractor: PlayerInteractor): ViewMode
 
     companion object {
         private const val TRACK_TIME_DELAY = 300L
+        private const val FIRST = 0
+        private const val TOAST_DELAY = 300L
     }
 }
