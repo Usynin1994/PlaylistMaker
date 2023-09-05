@@ -3,14 +3,14 @@ package com.example.playlistmaker.ui.media.view_model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.domain.api.media.PlaylistInteractor
+import com.example.playlistmaker.domain.api.media.PlaylistsInteractor
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.ui.media.PlaylistState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PlaylistsFragmentViewModel (
-    private val playlistInteractor: PlaylistInteractor) : ViewModel() {
+    private val playlistsInteractor: PlaylistsInteractor) : ViewModel() {
 
     private val _stateLiveData = MutableLiveData<PlaylistState>()
     val stateLiveData = _stateLiveData
@@ -21,7 +21,7 @@ class PlaylistsFragmentViewModel (
 
     fun fillData() {
         viewModelScope.launch (Dispatchers.IO) {
-            playlistInteractor.getPlaylists().collect {
+            playlistsInteractor.getPlaylists().collect {
                 processResult(it)
             }
         }

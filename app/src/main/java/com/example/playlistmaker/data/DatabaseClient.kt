@@ -13,4 +13,6 @@ interface DatabaseClient {
     suspend fun getPlaylists(): Flow<List<Playlist>>
     suspend fun insertPlaylist(playlist: Playlist)
     suspend fun updatePlaylist(playlist: Playlist)
+    suspend fun getPlaylistById(id: Int): Flow<Playlist>
+    suspend fun deletePlaylistById(id: Int)
 }

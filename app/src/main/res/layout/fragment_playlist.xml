@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_lite"
-    tools:context="">
+    tools:context=".ui.playlist.PlaylistFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout"
@@ -163,7 +163,7 @@
             android:src="@drawable/rectangle_bottom_sheet" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/historyRecycler"
+            android:id="@+id/tracksRecycler"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

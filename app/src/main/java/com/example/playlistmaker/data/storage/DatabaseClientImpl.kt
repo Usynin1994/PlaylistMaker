@@ -46,6 +46,15 @@ class DatabaseClientImpl (private val appDatabase: AppDatabase): DatabaseClient 
         appDatabase.playlistDao().updatePlaylist(convertToPlaylistEntity(playlist))
     }
 
+    override suspend fun getPlaylistById(id: Int): Flow<Playlist> = flow {
+        val playlist = appDatabase.playlistDao().getPlaylistById(id)
+        emit(playlist.toPlaylist())
+    }
+
+    override suspend fun deletePlaylistById(id: Int) {
+        appDatabase.playlistDao().deletePlaylistById(id)
+    }
+
     private fun convertFromTrackEntity(tracks: List<TrackEntity>): List<Track> {
         return tracks.map { track -> track.toTrack() }
     }
