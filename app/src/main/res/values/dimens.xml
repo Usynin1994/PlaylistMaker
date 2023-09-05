@@ -4,6 +4,8 @@
     <dimen name="text_size">22sp</dimen>
     <dimen name="middle_text_size">16sp</dimen>
     <dimen name="small_text_size">11sp</dimen>
+    <dimen name="playlist_year_text_size">18sp</dimen>
+    <dimen name="playlist_name_text_size">22sp</dimen>
     <dimen name="warning_text_size">19sp</dimen>
     <dimen name="reload_text_size">14sp</dimen>
     <dimen name="song_info_text_size">13sp</dimen>
