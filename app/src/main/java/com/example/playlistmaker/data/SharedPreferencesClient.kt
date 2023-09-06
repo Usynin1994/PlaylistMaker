@@ -19,4 +19,9 @@ interface SharedPreferencesClient {
     fun getTrack() : Track
 
     fun saveLastTrack(track: Track)
+
+    fun saveCurrentPlaylistId(id: Int)
+
+    fun getCurrentPlaylistId(): Int
+
 }

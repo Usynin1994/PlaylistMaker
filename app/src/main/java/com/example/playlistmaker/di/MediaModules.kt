@@ -53,7 +53,7 @@ val mediaModule = module {
     }
 
     single <PlaylistsRepository> {
-        PlaylistsRepositoryImpl(get())
+        PlaylistsRepositoryImpl(get(), get())
     }
 
     factory <PlaylistsInteractor> {

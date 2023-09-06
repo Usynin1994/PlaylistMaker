@@ -24,4 +24,6 @@ class PlaylistRepositoryImpl (private val databaseClient: DatabaseClient,
     override suspend fun deletePlaylist(playlistId: Int) {
        databaseClient.deletePlaylistById(playlistId)
     }
+
+    override fun getCurrentPlaylistId(): Int = spClient.getCurrentPlaylistId()
 }

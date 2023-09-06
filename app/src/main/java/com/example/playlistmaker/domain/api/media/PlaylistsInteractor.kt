@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface PlaylistsInteractor {
 
     suspend fun getPlaylists(): Flow<List<Playlist>>
-
+    fun saveCurrentPlaylistId(id: Int)
 }

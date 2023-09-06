@@ -92,6 +92,7 @@ class TracksFragment : Fragment(), TrackAdapter.ClickListener {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        trackAdapter = null
     }
 
     companion object {

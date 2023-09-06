@@ -90,6 +90,7 @@ class PlaylistsFragment : Fragment(), PlaylistAdapter.ClickListener {
 
 
     override fun onClick(playlist: Playlist) {
+        viewModel.saveCurrentPlaylistId(playlist.id)
         findNavController().navigate(R.id.action_mediaFragment_to_playlistFragment)
     }
 

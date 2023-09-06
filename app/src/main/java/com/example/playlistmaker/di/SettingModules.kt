@@ -7,6 +7,7 @@ import com.example.playlistmaker.data.SharedPreferencesClient
 import com.example.playlistmaker.data.repositories.media.FavoriteTrackRepositoryImpl
 import com.example.playlistmaker.data.repositories.media.PlaylistsRepositoryImpl
 import com.example.playlistmaker.data.repositories.player.PlayerRepositoryImpl
+import com.example.playlistmaker.data.repositories.playlist.PlaylistRepositoryImpl
 import com.example.playlistmaker.data.repositories.setting.SettingRepositoryImpl
 import com.example.playlistmaker.data.repositories.track.TrackRepositoryImpl
 import com.example.playlistmaker.data.storage.SharedPreferencesClientImpl
@@ -38,6 +39,7 @@ val settingViewModelModule = module {
         SettingRepositoryImpl::class,
         PlayerRepositoryImpl::class,
         FavoriteTrackRepositoryImpl::class,
+        PlaylistRepositoryImpl::class,
         PlaylistsRepositoryImpl::class))
 
     single<SharedPreferences> {

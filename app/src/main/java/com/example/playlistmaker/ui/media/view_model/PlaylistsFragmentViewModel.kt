@@ -27,6 +27,10 @@ class PlaylistsFragmentViewModel (
         }
     }
 
+    fun saveCurrentPlaylistId(id: Int) {
+        playlistsInteractor.saveCurrentPlaylistId(id)
+    }
+
     private fun processResult(playlists: List<Playlist>) {
         if (playlists.isEmpty()) {
             renderState(PlaylistState.Empty)

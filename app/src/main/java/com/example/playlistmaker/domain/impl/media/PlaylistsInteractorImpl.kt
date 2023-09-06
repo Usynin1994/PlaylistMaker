@@ -6,7 +6,12 @@ import com.example.playlistmaker.domain.model.Playlist
 import kotlinx.coroutines.flow.Flow
 
 class PlaylistsInteractorImpl (
-    private val playlistRepository: PlaylistsRepository): PlaylistsInteractor
+    private val playlistsRepository: PlaylistsRepository): PlaylistsInteractor
 {
-    override suspend fun getPlaylists(): Flow<List<Playlist>> = playlistRepository.getPlaylists()
+    override suspend fun getPlaylists(): Flow<List<Playlist>> = playlistsRepository.getPlaylists()
+
+    override fun saveCurrentPlaylistId(id: Int) {
+        playlistsRepository.saveCurrentPlaylistId(id)
+    }
+
 }
