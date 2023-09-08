@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.adapters.trackadapter
 
 import android.view.View
+import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -17,13 +18,20 @@ class TrackViewHolder (itemView: View): RecyclerView.ViewHolder (itemView) {
     private val trackTime = itemView.findViewById<TextView>(R.id.trackTime)
     private val trackImage = itemView.findViewById<ImageView>(R.id.trackImage)
 
-    fun bind (model: Track, listener: TrackAdapter.ClickListener) {
+    fun bind (model: Track, listener: TrackAdapter.ClickListener, longListener: TrackAdapter.OnLongClickListener? = null) {
         artistName.text = model.artistName
         trackName.text = model.trackName
         trackTime.text = model.trackTimeMillis.toLong().formatAsTime()
 
         itemView.setOnClickListener {
             listener.onClick(model)
+        }
+
+        if (longListener != null) {
+            itemView.setOnLongClickListener {
+                longListener.onLongClick(model)
+                true
+            }
         }
 
         Glide.with(itemView.context)

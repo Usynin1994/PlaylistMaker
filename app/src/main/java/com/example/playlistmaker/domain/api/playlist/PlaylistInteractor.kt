@@ -10,5 +10,5 @@ interface PlaylistInteractor {
     suspend fun updatePlaylist(playlist: Playlist)
     suspend fun deletePlaylist(playlistId: Int)
     fun getCurrentPlaylistId(): Int
-
+    fun sharePlaylist(message: String)
 }

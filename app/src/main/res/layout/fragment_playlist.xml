@@ -136,16 +136,9 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:id="@+id/backgroundDimLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/overlay_color"
-        android:visibility="gone"/>
-
     <LinearLayout
         style="@style/BottomSheetStyle"
-        android:id="@+id/standardBottomSheet"
+        android:id="@+id/tracksBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/rounded_rectangle"
@@ -156,7 +149,6 @@
 
 
         <ImageView
-            android:id="@+id/imageBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="8dp"
@@ -171,6 +163,61 @@
             android:paddingLeft="13dp"
             android:paddingTop="10dp"
             tools:listitem="@layout/track_card" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/backgroundDimLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/overlay_color"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        style="@style/BottomSheetStyle"
+        android:id="@+id/actionsBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_rectangle"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/layout_padding"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="300dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="8dp"
+            android:src="@drawable/rectangle_bottom_sheet" />
+
+        <include
+            android:id="@+id/included_layout"
+            layout="@layout/playlist_card_second" />
+
+        <Button
+            style="@style/SettingScreenButtonStyle"
+            android:id="@+id/buttonSharePlaylist"
+            android:layout_marginTop="12dp"
+            android:paddingRight="4dp"
+            android:text="@string/share"
+            />
+
+        <Button
+            style="@style/SettingScreenButtonStyle"
+            android:id="@+id/buttonEditPlaylist"
+            android:layout_marginTop="12dp"
+            android:paddingRight="4dp"
+            android:text="@string/edit_info"
+            />
+
+        <Button
+            style="@style/SettingScreenButtonStyle"
+            android:id="@+id/buttonDeletePlaylist"
+            android:layout_marginTop="12dp"
+            android:paddingRight="4dp"
+            android:text="@string/delete_playlist"
+            />
 
     </LinearLayout>
 

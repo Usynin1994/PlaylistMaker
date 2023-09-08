@@ -23,4 +23,8 @@ class PlaylistInteractorImpl (private val repository: PlaylistRepository) : Play
     }
 
     override fun getCurrentPlaylistId(): Int = repository.getCurrentPlaylistId()
+
+    override fun sharePlaylist(message: String) {
+        repository.sharePlaylist(message)
+    }
 }
