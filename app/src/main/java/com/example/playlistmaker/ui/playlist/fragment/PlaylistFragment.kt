@@ -1,23 +1,21 @@
-package com.example.playlistmaker.ui.playlist
+package com.example.playlistmaker.ui.playlist.fragment
 
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.adapters.trackadapter.TrackAdapter
+import com.example.playlistmaker.ui.playlist.viewmodel.PlaylistViewModel
 import com.example.playlistmaker.util.formatAsMinutes
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
 
 class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.OnLongClickListener {
 
@@ -68,16 +66,13 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
         trackAdapter = TrackAdapter(this, this)
         binding.tracksRecycler.adapter = trackAdapter
 
-        viewModel.playlistImage.observe(viewLifecycleOwner) { it ->
+        viewModel.playlistImage.observe(viewLifecycleOwner) {
             if (it == null) {
                 binding.imagePlaylist.setImageResource(R.drawable.placeholder)
                 binding.includedLayout.playlistImage.setImageResource(R.drawable.placeholder)
             } else {
-                val file = it.lastPathSegment?.let { File(File(requireContext().getExternalFilesDir(
-                    Environment.DIRECTORY_PICTURES), DIRECTORY
-                ), it) }
-                binding.imagePlaylist.setImageURI(file?.toUri())
-                binding.includedLayout.playlistImage.setImageURI(file?.toUri())
+                binding.imagePlaylist.setImageURI(it)
+                binding.includedLayout.playlistImage.setImageURI(it)
             }
         }
 
@@ -172,7 +167,6 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
     }
 
     companion object {
-        const val DIRECTORY = "playlist"
         const val ANIMATION_TIME = 300L
         const val ALPHA_START = 0f
         const val ALPHA_END = 0.7f

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Playlist
 import java.io.File
-import kotlin.math.abs
 
 class PlaylistViewHolder (itemView: View) : RecyclerView.ViewHolder (itemView){
 

@@ -1,5 +1,6 @@
 package com.example.playlistmaker.domain.impl.playlist
 
+import android.net.Uri
 import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.api.playlist.PlaylistRepository
 import com.example.playlistmaker.domain.model.Playlist
@@ -22,9 +23,13 @@ class PlaylistInteractorImpl (private val repository: PlaylistRepository) : Play
         repository.deletePlaylist(playlistId)
     }
 
+    override suspend fun getImageFile(segment: String?): Uri? {
+        return repository.getImageFile(segment)
+    }
+
     override fun getCurrentPlaylistId(): Int = repository.getCurrentPlaylistId()
 
-    override fun sharePlaylist(message: String) {
-        repository.sharePlaylist(message)
+    override fun sharePlaylist(playlist: Playlist) {
+        repository.sharePlaylist(playlist)
     }
 }

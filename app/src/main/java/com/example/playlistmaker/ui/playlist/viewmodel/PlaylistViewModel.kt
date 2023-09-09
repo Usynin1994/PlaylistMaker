@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.playlist
+package com.example.playlistmaker.ui.playlist.viewmodel
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.util.formatAsTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -36,11 +35,11 @@ class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel(
         fillData()
     }
 
-    fun fillData () {
+    private fun fillData () {
         viewModelScope.launch (Dispatchers.IO) {
             interactor.getPlaylist(interactor.getCurrentPlaylistId()).collect{
                 playlist = it
-                _playlistImage.postValue(it.image)
+                _playlistImage.postValue(interactor.getImageFile(it.image?.lastPathSegment))
                 if (_playlistName.value != it.name) _playlistName.postValue(it.name)
                 if (_playlistDescription.value != it.description) _playlistDescription.postValue(it.description)
                 _tracks.postValue(it.tracks)
@@ -72,18 +71,8 @@ class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel(
                 _noTracks.postValue(false)
             }
         } else {
-            playlist?.let { interactor.sharePlaylist(getMessage(it)) }
+            playlist?.let { interactor.sharePlaylist(it) }
         }
-    }
-
-    private fun getMessage(playlist: Playlist) : String {
-        var message = "${playlist.name} \n ${playlist.description} \n"
-        for ((index, obj) in playlist.tracks.withIndex()) {
-            message += "${index + 1}. ${obj.artistName} - " +
-                    "${obj.trackName} " +
-                    "(${obj.trackTimeMillis.toLong().formatAsTime()}) \n"
-        }
-        return message
     }
 
     companion object {

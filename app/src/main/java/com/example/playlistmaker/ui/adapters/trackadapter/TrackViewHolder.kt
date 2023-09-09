@@ -1,7 +1,6 @@
 package com.example.playlistmaker.ui.adapters.trackadapter
 
 import android.view.View
-import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView

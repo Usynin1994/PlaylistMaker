@@ -50,7 +50,7 @@
         tools:layout="@layout/fragment_create_playlist" />
     <fragment
         android:id="@+id/playlistFragment"
-        android:name="com.example.playlistmaker.ui.playlist.PlaylistFragment"
+        android:name="com.example.playlistmaker.ui.playlist.fragment.PlaylistFragment"
         android:label="fragment_playlist"
         tools:layout="@layout/fragment_playlist" >
         <action
