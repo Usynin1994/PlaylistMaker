@@ -156,8 +156,12 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
             .setMessage(requireContext().getString(R.string.certainty_to_remove))
             .setNegativeButton(requireContext().getString(R.string.cancel)) { _, _ ->}
             .setPositiveButton(requireContext().getString(R.string.delete)) { _, _ ->
+                val indexToRemove = trackAdapter?.tracks?.indexOfFirst { it.trackId == track.trackId }
+                if (indexToRemove != -1) {
+                    indexToRemove?.let { trackAdapter?.tracks?.removeAt(it) }
+                    indexToRemove?.let {trackAdapter?.notifyItemRemoved(it)}
+                }
                 viewModel.deleteTrack(track)
-                viewModel.fillData()
             }.show()
     }
 
