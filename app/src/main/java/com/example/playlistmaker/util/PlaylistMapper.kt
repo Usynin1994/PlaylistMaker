@@ -7,7 +7,7 @@ import com.example.playlistmaker.domain.model.Playlist
 fun Playlist.toPlaylistEntity() : PlaylistEntity {
     return PlaylistEntity(
         id = id,
-        image = image?.toString(),
+        image = image,
         name = name,
         description = description,
         tracks.map { track -> track.toTrackEntity() }.toList()
@@ -17,7 +17,7 @@ fun Playlist.toPlaylistEntity() : PlaylistEntity {
 fun PlaylistEntity.toPlaylist() : Playlist {
     return Playlist(
         id = id,
-        image = image?.toUri(),
+        image = image,
         name = name,
         description = description,
         tracks.map { track -> track.toTrack() }.toMutableList()

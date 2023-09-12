@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.playlist.viewmodel
 
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel() {
 
-    private var playlist: Playlist? = null
+    private var _playlist = MutableLiveData<Playlist>()
+    val playlist: LiveData<Playlist> = _playlist
 
     private val _playlistImage = MutableLiveData<Uri?>()
     val playlistImage: LiveData<Uri?> = _playlistImage
@@ -38,8 +40,8 @@ class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel(
     private fun fillData () {
         viewModelScope.launch (Dispatchers.IO) {
             interactor.getPlaylist(interactor.getCurrentPlaylistId()).collect{
-                playlist = it
-                _playlistImage.postValue(interactor.getImageFile(it.image?.lastPathSegment))
+                _playlist.postValue(it)
+                _playlistImage.postValue(interactor.getImageFile(it.image?.toUri()?.lastPathSegment))
                 if (_playlistName.value != it.name) _playlistName.postValue(it.name)
                 if (_playlistDescription.value != it.description) _playlistDescription.postValue(it.description)
                 _tracks.postValue(it.tracks)
@@ -51,27 +53,27 @@ class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel(
 
     fun deleteTrack(track: Track) {
         viewModelScope.launch (Dispatchers.IO){
-            playlist?.tracks?.remove(track)
-            playlist?.let { interactor.updatePlaylist(it) }
+            playlist.value?.tracks?.remove(track)
+            playlist.value?.let { interactor.updatePlaylist(it) }
             fillData()
         }
     }
 
     fun deletePlaylist() {
         viewModelScope.launch (Dispatchers.IO) {
-            playlist?.id?.let { interactor.deletePlaylist(it) }
+            playlist.value?.id?.let { interactor.deletePlaylist(it) }
         }
     }
 
     fun sharePlaylist() {
-        if (playlist?.tracks?.isEmpty() == true) {
+        if (playlist.value?.tracks?.isEmpty() == true) {
             viewModelScope.launch {
                 _noTracks.postValue(true)
                 delay(TOAST_DELAY)
                 _noTracks.postValue(false)
             }
         } else {
-            playlist?.let { interactor.sharePlaylist(it) }
+            playlist.value?.let { interactor.sharePlaylist(it) }
         }
     }
 

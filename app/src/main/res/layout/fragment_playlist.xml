@@ -155,6 +155,7 @@
             android:src="@drawable/rectangle_bottom_sheet" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:visibility="visible"
             android:id="@+id/tracksRecycler"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -163,6 +164,14 @@
             android:paddingLeft="13dp"
             android:paddingTop="10dp"
             tools:listitem="@layout/track_card" />
+
+        <TextView
+            android:visibility="gone"
+            style="@style/textErrorStyle"
+            android:layout_marginTop="20dp"
+            android:id="@+id/textNotFound"
+            android:text="@string/no_tracks_in_playlist"
+            />
 
     </LinearLayout>
 

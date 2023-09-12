@@ -9,9 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.adapters.trackadapter.TrackAdapter
 import com.example.playlistmaker.ui.playlist.viewmodel.PlaylistViewModel
+import com.example.playlistmaker.ui.playlistcreator.fragment.PlaylistEditorFragment
 import com.example.playlistmaker.util.formatAsMinutes
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -23,6 +25,8 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
     private var trackAdapter: TrackAdapter? = null
     private var _binding: FragmentPlaylistBinding? = null
     private val binding get() = _binding!!
+
+    private var playlist: Playlist? = null
 
     private val bottomSheetBehavior get() = BottomSheetBehavior.from(binding.actionsBottomSheet).apply {
         state = BottomSheetBehavior.STATE_HIDDEN
@@ -90,6 +94,10 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
         }
 
         viewModel.tracks.observe(viewLifecycleOwner) { list ->
+            if (list.isEmpty()) {
+                binding.textNotFound.visibility = View.VISIBLE
+                binding.tracksRecycler.visibility = View.GONE
+            }
             trackAdapter?.tracks = list as ArrayList<Track>
             binding.trackCount.text = resources
                 .getQuantityString(R.plurals.plural_tracks, list.size, list.size)
@@ -105,6 +113,10 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
             if (it == true) Toast.makeText(requireContext(),
                 requireContext().getString(R.string.no_tracks_to_share),
                 Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.playlist.observe(viewLifecycleOwner) {
+            playlist = it
         }
 
         binding.goBack.setOnClickListener{
@@ -132,11 +144,14 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
         }
 
         binding.buttonSharePlaylist.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             viewModel.sharePlaylist()
         }
 
         binding.buttonEditPlaylist.setOnClickListener {
-
+            findNavController().navigate(R.id.action_playlistFragment_to_playlistEditorFragment,
+                playlist?.let { PlaylistEditorFragment.createArgs(it) }
+            )
         }
     }
 
@@ -164,6 +179,7 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
         super.onDestroyView()
         _binding = null
         trackAdapter = null
+        playlist = null
     }
 
     companion object {

@@ -25,7 +25,7 @@ class PlaylistViewHolder (itemView: View) : RecyclerView.ViewHolder (itemView){
         if (model.image == null) {
             playlistImage.setImageResource(R.drawable.placeholder)
         } else {
-            val file = model.image.lastPathSegment?.let { File(filePath, it) }
+            val file = model.image.toUri().lastPathSegment?.let { File(filePath, it) }
             playlistImage.setImageURI(file?.toUri())
         }
 

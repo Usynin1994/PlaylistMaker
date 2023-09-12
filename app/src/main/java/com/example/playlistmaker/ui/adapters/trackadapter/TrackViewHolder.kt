@@ -17,10 +17,17 @@ class TrackViewHolder (itemView: View): RecyclerView.ViewHolder (itemView) {
     private val trackTime = itemView.findViewById<TextView>(R.id.trackTime)
     private val trackImage = itemView.findViewById<ImageView>(R.id.trackImage)
 
-    fun bind (model: Track, listener: TrackAdapter.ClickListener, longListener: TrackAdapter.OnLongClickListener? = null) {
+    fun bind (model: Track,
+              listener: TrackAdapter.ClickListener,
+              longListener: TrackAdapter.OnLongClickListener? = null,
+              )
+    {
         artistName.text = model.artistName
         trackName.text = model.trackName
         trackTime.text = model.trackTimeMillis.toLong().formatAsTime()
+
+        val artwork = model.artworkUrl60
+
 
         itemView.setOnClickListener {
             listener.onClick(model)
@@ -34,7 +41,7 @@ class TrackViewHolder (itemView: View): RecyclerView.ViewHolder (itemView) {
         }
 
         Glide.with(itemView.context)
-            .load(model.artworkUrl100)
+            .load(artwork)
             .placeholder(R.drawable.placeholder)
             .centerCrop()
             .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.artist_image_corner_radius)))

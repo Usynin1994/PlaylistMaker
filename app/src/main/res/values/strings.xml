@@ -42,10 +42,13 @@
     <string name="delete">Удалить</string>
     <string name="delete_playlist">Удалить плейлист</string>
     <string name="no_tracks_to_share">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="no_tracks_in_playlist">В этом плейлисте нет  треков</string>
     <string name="share">Поделиться</string>
     <string name="edit_info">Редактировать информацию</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
 
     <string name="supportMessage">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="supportMail">maximus616161@gmail.com</string>
