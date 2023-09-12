@@ -14,22 +14,21 @@ import java.io.FileOutputStream
 
 class InternalStorageClientImpl (val context: Context): InternalStorageClient {
 
-    override suspend fun saveImageToPrivateStorage(uri: Uri) {
-        val filePath = File(
-            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            DIRECTORY
-        )
-        if (!filePath.exists()){
+    override suspend fun saveImageToPrivateStorage(uri: String) {
+        val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), DIRECTORY)
+
+        if (!filePath.exists()) {
             filePath.mkdirs()
         }
-        val file = File(filePath, uri.lastPathSegment.toString())
-        val inputStream = context.contentResolver.openInputStream(uri)
+        val file = File(filePath, IMAGE_NAME)
+        val inputStream = context.contentResolver.openInputStream(uri.toUri())
         val outputStream = withContext(Dispatchers.IO) {
             FileOutputStream(file)
         }
+
         BitmapFactory
             .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+            .compress(Bitmap.CompressFormat.JPEG, QUALITY_IMAGE, outputStream)
     }
 
     override suspend fun getImageFile(segment: String?) : Uri? {
@@ -45,6 +44,8 @@ class InternalStorageClientImpl (val context: Context): InternalStorageClient {
 
     companion object {
         const val DIRECTORY = "playlist"
+        const val IMAGE_NAME = "image"
+        const val QUALITY_IMAGE = 30
     }
 
 

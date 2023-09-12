@@ -37,14 +37,14 @@ class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel(
         fillData()
     }
 
-    private fun fillData () {
+     fun fillData () {
         viewModelScope.launch (Dispatchers.IO) {
             interactor.getPlaylist(interactor.getCurrentPlaylistId()).collect{
                 _playlist.postValue(it)
-                _playlistImage.postValue(interactor.getImageFile(it.image?.toUri()?.lastPathSegment))
+                /*_playlistImage.postValue(_playlist?.value?.image?.toUri())
                 if (_playlistName.value != it.name) _playlistName.postValue(it.name)
                 if (_playlistDescription.value != it.description) _playlistDescription.postValue(it.description)
-                _tracks.postValue(it.tracks)
+                _tracks.postValue(it.tracks)*/
             }
         }
     }
@@ -76,6 +76,8 @@ class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel(
             playlist.value?.let { interactor.sharePlaylist(it) }
         }
     }
+
+
 
     companion object {
         const val TOAST_DELAY = 300L

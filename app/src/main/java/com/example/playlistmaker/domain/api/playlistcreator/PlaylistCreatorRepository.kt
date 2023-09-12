@@ -5,5 +5,5 @@ import com.example.playlistmaker.domain.model.Playlist
 
 interface PlaylistCreatorRepository {
     suspend fun insertPlaylist(playlist: Playlist)
-    suspend fun saveImageToPrivateStorage(uri: Uri)
+    suspend fun saveImageToPrivateStorage(uri: String)
 }

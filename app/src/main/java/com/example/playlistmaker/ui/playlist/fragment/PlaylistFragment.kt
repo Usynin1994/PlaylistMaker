@@ -1,16 +1,21 @@
 package com.example.playlistmaker.ui.playlist.fragment
 
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
+import com.example.playlistmaker.data.storage.InternalStorageClientImpl
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.ui.adapters.playlistadapter.PlaylistViewHolder
 import com.example.playlistmaker.ui.adapters.trackadapter.TrackAdapter
 import com.example.playlistmaker.ui.playlist.viewmodel.PlaylistViewModel
 import com.example.playlistmaker.ui.playlistcreator.fragment.PlaylistEditorFragment
@@ -18,6 +23,9 @@ import com.example.playlistmaker.util.formatAsMinutes
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
+
+const val DIRECTORY = "playlist"
 
 class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.OnLongClickListener {
 
@@ -26,7 +34,7 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
     private var _binding: FragmentPlaylistBinding? = null
     private val binding get() = _binding!!
 
-    private var playlist: Playlist? = null
+    private var currentPlaylist: Playlist? = null
 
     private val bottomSheetBehavior get() = BottomSheetBehavior.from(binding.actionsBottomSheet).apply {
         state = BottomSheetBehavior.STATE_HIDDEN
@@ -43,6 +51,8 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //viewModel.fillData()
 
         binding.backgroundDimLayout.alpha = ALPHA_START
 
@@ -80,7 +90,7 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
             }
         }
 
-        viewModel.playlistName.observe(viewLifecycleOwner) {
+        /*viewModel.playlistName.observe(viewLifecycleOwner) {
             binding.textPlaylistName.text = it
             binding.includedLayout.playlistName.text = it
         }
@@ -107,7 +117,7 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
                 list.sumOf { it.trackTimeMillis.toLong() }.formatAsMinutes())
             binding.includedLayout.playlistTrackCount.text = resources
                 .getQuantityString(R.plurals.plural_tracks, list.size, list.size)
-        }
+        }*/
 
         viewModel.noTracks.observe(viewLifecycleOwner) {
             if (it == true) Toast.makeText(requireContext(),
@@ -115,8 +125,37 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
                 Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.playlist.observe(viewLifecycleOwner) {
-            playlist = it
+        viewModel.playlist.observe(viewLifecycleOwner) {playlist ->
+            currentPlaylist = playlist
+            binding.textPlaylistName.text = playlist.name
+            binding.includedLayout.playlistName.text = playlist.name
+            if (playlist.description.isNullOrEmpty()) {
+                binding.textPlaylistDescription.visibility = View.GONE
+            } else {
+                binding.textPlaylistDescription.text = playlist.description
+            }
+
+            if (playlist.tracks.isEmpty()) {
+                binding.textNotFound.visibility = View.VISIBLE
+                binding.tracksRecycler.visibility = View.GONE
+            }
+            trackAdapter?.tracks = playlist.tracks as ArrayList<Track>
+            binding.trackCount.text = resources
+                .getQuantityString(R.plurals.plural_tracks, playlist.tracks.size, playlist.tracks.size)
+            binding.trackTime.text = resources.getQuantityString(
+                R.plurals.plural_minutes,
+                playlist.tracks.sumOf { it.trackTimeMillis.toLong() }.formatAsMinutes().toInt(),
+                playlist.tracks.sumOf { it.trackTimeMillis.toLong() }.formatAsMinutes())
+            binding.includedLayout.playlistTrackCount.text = resources
+                .getQuantityString(R.plurals.plural_tracks, playlist.tracks.size, playlist.tracks.size)
+
+            val filePath = File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                PlaylistViewHolder.DIRECTORY
+            )
+            val file = playlist.image?.let { File(filePath, PlaylistViewHolder.IMAGE_NAME) }
+            binding.imagePlaylist.setImageURI(file?.toUri())
+            binding.includedLayout.playlistImage.setImageURI(file?.toUri())
+
         }
 
         binding.goBack.setOnClickListener{
@@ -150,7 +189,7 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
 
         binding.buttonEditPlaylist.setOnClickListener {
             findNavController().navigate(R.id.action_playlistFragment_to_playlistEditorFragment,
-                playlist?.let { PlaylistEditorFragment.createArgs(it) }
+                currentPlaylist?.let { PlaylistEditorFragment.createArgs(it) }
             )
         }
     }
@@ -179,7 +218,7 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
         super.onDestroyView()
         _binding = null
         trackAdapter = null
-        playlist = null
+        currentPlaylist = null
     }
 
     companion object {

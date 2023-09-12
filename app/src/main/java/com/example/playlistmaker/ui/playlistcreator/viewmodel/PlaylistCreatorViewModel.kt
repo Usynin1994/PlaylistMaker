@@ -26,7 +26,7 @@ class PlaylistCreatorViewModel(
         }
     }
 
-    fun saveToPrivateStorage(uri: Uri) {
+    fun saveToPrivateStorage(uri: String) {
         viewModelScope.launch(Dispatchers.IO) {
             creatorInteractor.saveImageToPrivateStorage(uri)
         }

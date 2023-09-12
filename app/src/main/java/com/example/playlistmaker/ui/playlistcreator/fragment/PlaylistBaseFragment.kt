@@ -22,13 +22,13 @@ abstract class PlaylistBaseFragment : Fragment() {
     var _binding: FragmentCreatePlaylistBinding? = null
     val binding get() = _binding!!
 
-    var imageUri: Uri? = null
+    var imageUri: String? = null
 
     val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 binding.playlistImage.setImageURI(uri)
-                imageUri = uri
+                imageUri = uri.toString()
             }
         }
 
