@@ -6,11 +6,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Playlist
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.Serializable
 
 class PlaylistEditorFragment : PlaylistBaseFragment() {
@@ -20,19 +24,51 @@ class PlaylistEditorFragment : PlaylistBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.headerText.text = requireContext().getString(R.string.edit)
-        binding.buttonCreatePlaylist.text = requireContext().getString(R.string.save)
-
         playlist = requireArguments().getSerializableExtra(EDIT_PLAYLIST, Playlist::class.java)
 
         playlist?.name?.let { binding.editTextPlaylistTitle.setText(it) }
         playlist?.description?.let { binding.editTextPlaylistDescription.setText(it) }
 
-        //playlist?.image?.let { binding.playlistImage.setImageURI(it.toUri())}
+        viewLifecycleOwner.lifecycleScope.launch (Dispatchers.IO){
+            if (playlist?.image == "null") {
+                binding.playlistImage.setImageResource(R.drawable.placeholder)
+            } else {
+                binding.playlistImage.setImageURI(playlist?.let {
+                    viewModel.getImageFile(it.image?.toUri()?.lastPathSegment)
+                })
+            }
+        }
 
+        binding.buttonCreatePlaylist.isEnabled = true
+        context?.let {
+            ContextCompat.getColor(
+                it,
+                R.color.blue_main)
+        }?.let {
+            binding.buttonCreatePlaylist.setBackgroundColor(
+                it
+            )
+        }
+
+        binding.headerText.text = requireContext().getString(R.string.edit)
+        binding.buttonCreatePlaylist.text = requireContext().getString(R.string.save)
 
         binding.playlistImage.setOnClickListener{
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+        binding.buttonCreatePlaylist.setOnClickListener {
+            viewModel.updatePlaylist(
+                id = playlist!!.id,
+                image = if (imageUri != null) imageUri.toString() else playlist!!.image,
+                name = binding.editTextPlaylistTitle.text.toString(),
+                description = binding.editTextPlaylistDescription.text.toString(),
+                tracks = playlist!!.tracks
+            )
+            if (imageUri.toString() != playlist!!.image) {
+                imageUri?.let {viewModel.saveToPrivateStorage(it)}
+            }
+            findNavController().navigateUp()
         }
 
         binding.editTextPlaylistTitle.addTextChangedListener(textWatcher)

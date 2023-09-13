@@ -4,11 +4,10 @@ import android.os.Environment
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Playlist
 import java.io.File
@@ -24,19 +23,14 @@ class PlaylistViewHolder (itemView: View) : RecyclerView.ViewHolder (itemView){
         playlistName.text = model.name
         playlistTracks.text = itemView.context
             .resources.getQuantityString(R.plurals.plural_tracks, model.tracks.size, model.tracks.size)
+            //и тут поменял на глайд
+            val file = model.image?.let { File(filePath, it.toUri().lastPathSegment) }
+            Glide.with(itemView)
+                .load(file)
+                .placeholder(R.drawable.placeholder)
+                .centerCrop()
+                .into(playlistImage)
 
-        if (model.image == null) {
-            playlistImage.setImageResource(R.drawable.placeholder)
-        } else {
-            val file = model.image?.let { File(filePath, IMAGE_NAME) }
-            playlistImage.setImageURI(file?.toUri())
-        }
-
-        /*Glide.with(itemView.context)
-            .load(model.image)
-            .transform(CenterCrop(), RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.corner_radius_8)))
-            .placeholder(R.drawable.placeholder)
-            .into(playlistImage)*/
 
         itemView.setOnClickListener {
             listener.onClick(model)
@@ -46,7 +40,5 @@ class PlaylistViewHolder (itemView: View) : RecyclerView.ViewHolder (itemView){
 
     companion object {
         const val DIRECTORY = "playlist"
-        const val IMAGE_NAME = "image"
-
     }
 }

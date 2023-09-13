@@ -14,7 +14,15 @@ class PlaylistCreatorRepositroyImpl (
         databaseClient.insertPlaylist(playlist)
     }
 
-    override suspend fun saveImageToPrivateStorage(uri: String) {
+    override suspend fun saveImageToPrivateStorage(uri: Uri) {
         internalStorageClient.saveImageToPrivateStorage(uri)
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        databaseClient.updatePlaylist(playlist)
+    }
+
+    override suspend fun getImageFile(segment: String?): Uri? {
+        return internalStorageClient.getImageFile(segment)
     }
 }

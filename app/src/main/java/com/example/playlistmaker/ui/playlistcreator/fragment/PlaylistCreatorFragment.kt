@@ -1,25 +1,15 @@
 package com.example.playlistmaker.ui.playlistcreator.fragment
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
-import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
-import com.example.playlistmaker.ui.playlistcreator.viewmodel.PlaylistCreatorViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistCreatorFragment : PlaylistBaseFragment() {
 
@@ -27,10 +17,10 @@ class PlaylistCreatorFragment : PlaylistBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val confirmDialog = MaterialAlertDialogBuilder(requireContext())
+        val confirmDialog = MaterialAlertDialogBuilder(requireContext(), R.style.MyDialogTheme)
             .setTitle(requireContext().getString(R.string.cancel_creating_of_playlist))
             .setMessage(requireContext().getString(R.string.all_unsaved_data_will_be_lost))
-            .setNeutralButton(requireContext().getString(R.string.cancel)) { _, _ -> }
+            .setNegativeButton(requireContext().getString(R.string.cancel)) { _, _ -> }
             .setPositiveButton(requireContext().getString(R.string.finish)) { _, _ ->
                 findNavController().navigateUp()
             }

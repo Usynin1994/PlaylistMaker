@@ -10,7 +10,7 @@ import com.example.playlistmaker.domain.model.Track
 
 class TrackAdapter (private val listener: ClickListener,
                     private val longClick: OnLongClickListener? = null,
-                    ): RecyclerView.Adapter<TrackViewHolder> () {
+    ): RecyclerView.Adapter<TrackViewHolder> () {
 
     internal var tracks = ArrayList<Track>()
         set(newValue) {

@@ -3,6 +3,7 @@ package com.example.playlistmaker.data.repositories.playlist
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import com.example.playlistmaker.R
 import com.example.playlistmaker.data.DatabaseClient
 import com.example.playlistmaker.data.InternalStorageClient
 import com.example.playlistmaker.data.SharedPreferencesClient
@@ -39,7 +40,10 @@ class PlaylistRepositoryImpl (private val databaseClient: DatabaseClient,
     }
 
     override fun sharePlaylist(playlist: Playlist) {
-        var message = "${playlist.name} \n ${playlist.description} \n"
+        var message = "${playlist.name} \n ${playlist.description} \n ${context.resources.getQuantityString(
+            R.plurals.plural_tracks, 
+            playlist.tracks.size, 
+            playlist.tracks.size)} \n"
         for ((index, obj) in playlist.tracks.withIndex()) {
             message += "${index + 1}. ${obj.artistName} - " +
                     "${obj.trackName} " +

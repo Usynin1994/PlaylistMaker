@@ -15,6 +15,8 @@ import kotlinx.coroutines.launch
 
 class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel() {
 
+    private var trackId: Int? = null
+
     private var _playlist = MutableLiveData<Playlist>()
     val playlist: LiveData<Playlist> = _playlist
 
@@ -34,17 +36,23 @@ class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel(
     val noTracks: LiveData<Boolean> = _noTracks
 
     init {
-        fillData()
+        takeId()
+     }
+
+    private fun takeId(){
+        viewModelScope.launch (Dispatchers.IO) {
+            trackId = interactor.getCurrentPlaylistId()
+        }
     }
 
-     fun fillData () {
+    fun fillData () {
         viewModelScope.launch (Dispatchers.IO) {
-            interactor.getPlaylist(interactor.getCurrentPlaylistId()).collect{
+            interactor.getPlaylist(trackId!!).collect{
                 _playlist.postValue(it)
-                /*_playlistImage.postValue(_playlist?.value?.image?.toUri())
+                _playlistImage.postValue(interactor.getImageFile(it.image?.toUri()?.lastPathSegment))
                 if (_playlistName.value != it.name) _playlistName.postValue(it.name)
                 if (_playlistDescription.value != it.description) _playlistDescription.postValue(it.description)
-                _tracks.postValue(it.tracks)*/
+                _tracks.postValue(it.tracks)
             }
         }
     }
@@ -76,8 +84,6 @@ class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel(
             playlist.value?.let { interactor.sharePlaylist(it) }
         }
     }
-
-
 
     companion object {
         const val TOAST_DELAY = 300L

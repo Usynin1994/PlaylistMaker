@@ -13,7 +13,7 @@ class PlaylistCreatorViewModel(
     private val creatorInteractor: PlaylistCreatorInteractor
 ) : ViewModel() {
 
-    fun insertPlaylist(name: String, image: String?, description: String, trackList: MutableList<Track> = mutableListOf()) {
+    fun insertPlaylist(name: String, image: String, description: String, trackList: MutableList<Track> = mutableListOf()) {
         viewModelScope.launch (Dispatchers.IO) {
             creatorInteractor.insertPlaylist(
                 Playlist(
@@ -26,9 +26,23 @@ class PlaylistCreatorViewModel(
         }
     }
 
-    fun saveToPrivateStorage(uri: String) {
+    fun saveToPrivateStorage(uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
             creatorInteractor.saveImageToPrivateStorage(uri)
         }
     }
+
+    fun updatePlaylist(id: Int, image: String?, name: String, description: String?, tracks: MutableList<Track>){
+        viewModelScope.launch (Dispatchers.IO){
+            creatorInteractor.updatePlaylist(Playlist(
+            id = id,
+            image = image,
+            name = name,
+            description = description,
+            tracks = tracks
+        ))
+        }
+    }
+
+    suspend fun getImageFile(segment: String?): Uri? = creatorInteractor.getImageFile(segment)
 }
