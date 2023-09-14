@@ -1,6 +1,5 @@
 package com.example.playlistmaker.domain.model
 
-import android.net.Uri
 import java.io.Serializable
 
 data class Playlist (val id: Int = 0,

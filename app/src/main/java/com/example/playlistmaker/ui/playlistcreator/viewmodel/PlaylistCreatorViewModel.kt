@@ -1,6 +1,8 @@
 package com.example.playlistmaker.ui.playlistcreator.viewmodel
 
 import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.playlistcreator.PlaylistCreatorInteractor
@@ -12,6 +14,9 @@ import kotlinx.coroutines.launch
 class PlaylistCreatorViewModel(
     private val creatorInteractor: PlaylistCreatorInteractor
 ) : ViewModel() {
+
+    private var _image = MutableLiveData<Uri?>()
+    val image: LiveData<Uri?> = _image
 
     fun insertPlaylist(name: String, image: String, description: String, trackList: MutableList<Track> = mutableListOf()) {
         viewModelScope.launch (Dispatchers.IO) {
@@ -44,5 +49,11 @@ class PlaylistCreatorViewModel(
         }
     }
 
-    suspend fun getImageFile(segment: String?): Uri? = creatorInteractor.getImageFile(segment)
+    fun getImageFile(segment: String?){
+        viewModelScope.launch(Dispatchers.IO) {
+            _image.postValue(creatorInteractor.getImageFile(segment))
+        }
+    }
+
+
 }

@@ -9,12 +9,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Playlist
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.Serializable
 
 class PlaylistEditorFragment : PlaylistBaseFragment() {
@@ -25,17 +22,16 @@ class PlaylistEditorFragment : PlaylistBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         playlist = requireArguments().getSerializableExtra(EDIT_PLAYLIST, Playlist::class.java)
+        viewModel.getImageFile(playlist?.image?.toUri()?.lastPathSegment)
 
         playlist?.name?.let { binding.editTextPlaylistTitle.setText(it) }
         playlist?.description?.let { binding.editTextPlaylistDescription.setText(it) }
 
-        viewLifecycleOwner.lifecycleScope.launch (Dispatchers.Main){
+        viewModel.image.observe(viewLifecycleOwner) {
             if (playlist?.image == "null") {
                 binding.playlistImage.setImageResource(R.drawable.placeholder)
             } else {
-                binding.playlistImage.setImageURI(playlist?.let {
-                    viewModel.getImageFile(it.image?.toUri()?.lastPathSegment)
-                })
+                binding.playlistImage.setImageURI(it)
             }
         }
 
