@@ -29,7 +29,7 @@ class PlaylistEditorFragment : PlaylistBaseFragment() {
         playlist?.name?.let { binding.editTextPlaylistTitle.setText(it) }
         playlist?.description?.let { binding.editTextPlaylistDescription.setText(it) }
 
-        viewLifecycleOwner.lifecycleScope.launch (Dispatchers.IO){
+        viewLifecycleOwner.lifecycleScope.launch (Dispatchers.Main){
             if (playlist?.image == "null") {
                 binding.playlistImage.setImageResource(R.drawable.placeholder)
             } else {

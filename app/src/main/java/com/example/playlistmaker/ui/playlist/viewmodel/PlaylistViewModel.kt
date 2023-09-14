@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel() {
 
-    private var trackId: Int? = null
+    private var trackId = interactor.getCurrentPlaylistId()
 
     private var _playlist = MutableLiveData<Playlist>()
     val playlist: LiveData<Playlist> = _playlist
@@ -35,19 +35,9 @@ class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel(
     private val _noTracks = MutableLiveData<Boolean>()
     val noTracks: LiveData<Boolean> = _noTracks
 
-    init {
-        takeId()
-     }
-
-    private fun takeId(){
-        viewModelScope.launch (Dispatchers.IO) {
-            trackId = interactor.getCurrentPlaylistId()
-        }
-    }
-
     fun fillData () {
         viewModelScope.launch (Dispatchers.IO) {
-            interactor.getPlaylist(trackId!!).collect{
+            interactor.getPlaylist(trackId).collect{
                 _playlist.postValue(it)
                 _playlistImage.postValue(interactor.getImageFile(it.image?.toUri()?.lastPathSegment))
                 if (_playlistName.value != it.name) _playlistName.postValue(it.name)

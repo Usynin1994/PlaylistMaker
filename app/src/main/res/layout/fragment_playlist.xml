@@ -60,7 +60,7 @@
             android:id="@+id/textPlaylistName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="24dp"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
@@ -151,7 +151,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
+            android:layout_marginVertical="16dp"
             android:src="@drawable/rectangle_bottom_sheet" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -189,7 +189,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/rounded_rectangle"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/layout_padding"
+        android:paddingHorizontal="13dp"
         app:behavior_hideable="true"
         app:behavior_peekHeight="300dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -207,7 +207,8 @@
         <Button
             style="@style/SettingScreenButtonStyle"
             android:id="@+id/buttonSharePlaylist"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="3dp"
             android:paddingRight="4dp"
             android:text="@string/share"
             />
@@ -215,16 +216,16 @@
         <Button
             style="@style/SettingScreenButtonStyle"
             android:id="@+id/buttonEditPlaylist"
-            android:layout_marginTop="12dp"
             android:paddingRight="4dp"
+            android:layout_marginHorizontal="3dp"
             android:text="@string/edit_info"
             />
 
         <Button
             style="@style/SettingScreenButtonStyle"
             android:id="@+id/buttonDeletePlaylist"
-            android:layout_marginTop="12dp"
             android:paddingRight="4dp"
+            android:layout_marginHorizontal="3dp"
             android:text="@string/delete_playlist"
             />
 
