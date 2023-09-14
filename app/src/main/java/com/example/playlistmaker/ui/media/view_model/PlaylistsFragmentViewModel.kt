@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.media.view_model
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +14,7 @@ class PlaylistsFragmentViewModel (
     private val playlistsInteractor: PlaylistsInteractor) : ViewModel() {
 
     private val _stateLiveData = MutableLiveData<PlaylistState>()
-    val stateLiveData = _stateLiveData
+    val stateLiveData: LiveData<PlaylistState> = _stateLiveData
 
     init {
         renderState(PlaylistState.Loading)
@@ -40,6 +41,6 @@ class PlaylistsFragmentViewModel (
     }
 
     private fun renderState(state: PlaylistState) {
-        stateLiveData.postValue(state)
+        _stateLiveData.postValue(state)
     }
 }

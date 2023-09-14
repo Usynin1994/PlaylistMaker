@@ -74,7 +74,7 @@ class PlaylistsFragment : Fragment(), PlaylistAdapter.ClickListener {
 
     private fun showContent(playlists: List<Playlist>){
         clearContent()
-        playlistAdapter?.playlists = playlists as ArrayList<Playlist>
+        playlistAdapter?.playlists = playlists
         binding.playlistsRecycler.visibility = View.VISIBLE
     }
 

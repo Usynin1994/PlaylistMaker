@@ -94,7 +94,7 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ClickListener {
         }
 
         viewModel.playlists.observe(viewLifecycleOwner) {
-            playlistAdapter?.playlists = it as ArrayList<Playlist>
+            playlistAdapter?.playlists = it
         }
 
         viewModel.isInPlaylist.observe(viewLifecycleOwner) {
