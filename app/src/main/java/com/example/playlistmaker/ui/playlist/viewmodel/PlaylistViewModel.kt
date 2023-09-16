@@ -17,7 +17,7 @@ class PlaylistViewModel (private val interactor: PlaylistInteractor): ViewModel(
 
     private var trackId = interactor.getCurrentPlaylistId()
 
-    private var _playlist = MutableLiveData<Playlist>()
+    private val _playlist = MutableLiveData<Playlist>()
     val playlist: LiveData<Playlist> = _playlist
 
     private val _playlistImage = MutableLiveData<Uri?>()

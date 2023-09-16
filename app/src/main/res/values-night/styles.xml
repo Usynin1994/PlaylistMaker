@@ -46,7 +46,7 @@
 
     <style name="EditTextStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:drawablePadding">8dp</item>
         <item name="android:drawableStart">@drawable/small_search</item>
         <item name="android:drawableTint">@color/black_main</item>

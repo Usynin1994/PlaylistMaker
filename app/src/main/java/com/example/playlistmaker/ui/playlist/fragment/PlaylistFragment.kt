@@ -70,6 +70,8 @@ class PlaylistFragment : Fragment(), TrackAdapter.ClickListener, TrackAdapter.On
             }
         })
 
+        binding.textPlaylistName.isSelected = true
+        binding.textPlaylistDescription.isSelected = true
         trackAdapter = TrackAdapter(this, this)
         binding.tracksRecycler.adapter = trackAdapter
 

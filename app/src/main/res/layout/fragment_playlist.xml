@@ -58,7 +58,7 @@
 
         <TextView
             android:id="@+id/textPlaylistName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:ellipsize="marquee"
@@ -69,18 +69,23 @@
             android:textSize="@dimen/playlist_name_text_size"
             app:layout_constraintStart_toEndOf="@id/leftBorder"
             app:layout_constraintTop_toBottomOf="@id/imagePlaylist"
+            app:layout_constraintEnd_toStartOf="@id/rightBorder"
             tools:text="ЛУЧШИЙ Плейлист" />
 
         <TextView
             android:id="@+id/textPlaylistDescription"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
             android:fontFamily="@font/ys_display_regular"
             android:textColor="@color/black_main"
             android:textSize="@dimen/playlist_year_text_size"
             app:layout_constraintStart_toEndOf="@id/leftBorder"
             app:layout_constraintTop_toBottomOf="@id/textPlaylistName"
+            app:layout_constraintEnd_toStartOf="@id/rightBorder"
             tools:text="2022" />
 
         <TextView
