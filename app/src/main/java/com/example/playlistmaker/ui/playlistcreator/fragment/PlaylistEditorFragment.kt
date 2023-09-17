@@ -66,7 +66,7 @@ class PlaylistEditorFragment : PlaylistBaseFragment() {
                 tracks = playlist!!.tracks
             )
             binding.buttonCreatePlaylist.isEnabled = false
-            if (imageUri.toString() != playlist!!.image) {
+            if (imageUri.toString() != playlist!!.image && imageUri != null) {
                  viewModel.saveToPrivateStorage(imageUri!!, onComplete)
             } else {
                 findNavController().navigateUp()
