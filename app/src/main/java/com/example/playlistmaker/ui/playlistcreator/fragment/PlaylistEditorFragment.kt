@@ -65,10 +65,12 @@ class PlaylistEditorFragment : PlaylistBaseFragment() {
                 description = binding.editTextPlaylistDescription.text.toString(),
                 tracks = playlist!!.tracks
             )
+            binding.buttonCreatePlaylist.isEnabled = true
             if (imageUri.toString() != playlist!!.image) {
-                imageUri?.let { viewModel.saveToPrivateStorage(it, onComplete) }
+                 viewModel.saveToPrivateStorage(imageUri!!, onComplete)
+            } else {
+                findNavController().navigateUp()
             }
-            findNavController().navigateUp()
         }
 
         binding.goBack.setOnClickListener {
