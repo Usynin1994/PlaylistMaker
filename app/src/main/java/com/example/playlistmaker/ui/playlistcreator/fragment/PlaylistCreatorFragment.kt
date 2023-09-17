@@ -36,7 +36,6 @@ class PlaylistCreatorFragment : PlaylistBaseFragment() {
                 imageUri.toString(),
                 binding.editTextPlaylistDescription.text.toString()
                 )
-            imageUri?.let {viewModel.saveToPrivateStorage(it)}
 
             Toast.makeText(
                 requireContext(),
@@ -44,7 +43,11 @@ class PlaylistCreatorFragment : PlaylistBaseFragment() {
                 Toast.LENGTH_LONG
             ).show()
 
-            findNavController().navigateUp()
+            if (imageUri != null) {
+                viewModel.saveToPrivateStorage(imageUri!!, onComplete)
+            } else {
+                findNavController().navigateUp()
+            }
         }
 
         binding.goBack.setOnClickListener {

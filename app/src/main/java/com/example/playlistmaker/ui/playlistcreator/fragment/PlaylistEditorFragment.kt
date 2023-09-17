@@ -17,9 +17,12 @@ import java.io.Serializable
 class PlaylistEditorFragment : PlaylistBaseFragment() {
 
     private var playlist: Playlist? = null
+
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.editTextPlaylistTitle.addTextChangedListener(textWatcher)
 
         playlist = requireArguments().getSerializableExtra(EDIT_PLAYLIST, Playlist::class.java)
         viewModel.getImageFile(playlist?.image?.toUri()?.lastPathSegment)
@@ -39,7 +42,8 @@ class PlaylistEditorFragment : PlaylistBaseFragment() {
         context?.let {
             ContextCompat.getColor(
                 it,
-                R.color.blue_main)
+                R.color.blue_main
+            )
         }?.let {
             binding.buttonCreatePlaylist.setBackgroundColor(
                 it
@@ -49,7 +53,7 @@ class PlaylistEditorFragment : PlaylistBaseFragment() {
         binding.headerText.text = requireContext().getString(R.string.edit)
         binding.buttonCreatePlaylist.text = requireContext().getString(R.string.save)
 
-        binding.playlistImage.setOnClickListener{
+        binding.playlistImage.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
@@ -62,12 +66,10 @@ class PlaylistEditorFragment : PlaylistBaseFragment() {
                 tracks = playlist!!.tracks
             )
             if (imageUri.toString() != playlist!!.image) {
-                imageUri?.let {viewModel.saveToPrivateStorage(it)}
+                imageUri?.let { viewModel.saveToPrivateStorage(it, onComplete) }
             }
             findNavController().navigateUp()
         }
-
-        binding.editTextPlaylistTitle.addTextChangedListener(textWatcher)
 
         binding.goBack.setOnClickListener {
             findNavController().navigateUp()

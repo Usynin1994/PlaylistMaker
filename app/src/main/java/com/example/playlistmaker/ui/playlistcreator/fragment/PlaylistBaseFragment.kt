@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.example.playlistmaker.ui.playlistcreator.viewmodel.PlaylistCreatorViewModel
@@ -64,6 +65,10 @@ abstract class PlaylistBaseFragment : Fragment() {
                 }
             }
         }
+    }
+
+    val onComplete: () -> Unit = {
+        findNavController().navigateUp()
     }
 
     override fun onCreateView(

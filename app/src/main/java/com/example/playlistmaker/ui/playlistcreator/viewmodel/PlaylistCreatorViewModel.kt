@@ -10,6 +10,7 @@ import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PlaylistCreatorViewModel(
     private val creatorInteractor: PlaylistCreatorInteractor
@@ -31,9 +32,12 @@ class PlaylistCreatorViewModel(
         }
     }
 
-    fun saveToPrivateStorage(uri: Uri) {
+    fun saveToPrivateStorage(uri: Uri, onComplete: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             creatorInteractor.saveImageToPrivateStorage(uri)
+            withContext(Dispatchers.Main) {
+                onComplete()
+            }
         }
     }
 
