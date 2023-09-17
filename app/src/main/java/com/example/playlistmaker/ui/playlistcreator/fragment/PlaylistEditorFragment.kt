@@ -65,7 +65,7 @@ class PlaylistEditorFragment : PlaylistBaseFragment() {
                 description = binding.editTextPlaylistDescription.text.toString(),
                 tracks = playlist!!.tracks
             )
-            binding.buttonCreatePlaylist.isEnabled = true
+            binding.buttonCreatePlaylist.isEnabled = false
             if (imageUri.toString() != playlist!!.image) {
                  viewModel.saveToPrivateStorage(imageUri!!, onComplete)
             } else {

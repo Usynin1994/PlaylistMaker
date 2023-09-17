@@ -42,7 +42,7 @@ class PlaylistCreatorFragment : PlaylistBaseFragment() {
                 getString(R.string.playlist_created, binding.editTextPlaylistTitle.text.toString()),
                 Toast.LENGTH_LONG
             ).show()
-
+            binding.buttonCreatePlaylist.isEnabled = false
             if (imageUri != null) {
                 viewModel.saveToPrivateStorage(imageUri!!, onComplete)
             } else {
