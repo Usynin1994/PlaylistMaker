@@ -15,4 +15,12 @@ class PlaylistCreatorInteractorImpl(
     override suspend fun saveImageToPrivateStorage(uri: Uri) {
         repository.saveImageToPrivateStorage(uri)
     }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        repository.updatePlaylist(playlist)
+    }
+
+    override suspend fun getImageFile(segment: String?): Uri? {
+        return repository.getImageFile(segment)
+    }
 }

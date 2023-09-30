@@ -50,9 +50,19 @@ class SharedPreferencesClientImpl(private val sp: SharedPreferences) : SharedPre
         sp.edit().putString(LAST_TRACK_KEY, json).apply()
     }
 
+    override fun saveCurrentPlaylistId(id: Int) {
+        sp.edit().remove(PLAYLIST_ID_KEY).apply()
+        sp.edit().putInt(PLAYLIST_ID_KEY, id).apply()
+    }
+
+    override fun getCurrentPlaylistId(): Int {
+        return sp.getInt(PLAYLIST_ID_KEY, 0)
+    }
+
     companion object {
         const val HISTORY_KEY = "track_key"
         const val LAST_TRACK_KEY = "last_track"
+        const val PLAYLIST_ID_KEY = "last_track"
         const val FIRST = 0
         const val MAX_SIZE = 10
     }

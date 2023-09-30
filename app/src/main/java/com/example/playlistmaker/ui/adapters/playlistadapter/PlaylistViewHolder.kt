@@ -4,12 +4,13 @@ import android.os.Environment
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Playlist
 import java.io.File
-import kotlin.math.abs
 
 class PlaylistViewHolder (itemView: View) : RecyclerView.ViewHolder (itemView){
 
@@ -21,36 +22,18 @@ class PlaylistViewHolder (itemView: View) : RecyclerView.ViewHolder (itemView){
     fun bind (model: Playlist, listener: PlaylistAdapter.ClickListener) {
         playlistName.text = model.name
         playlistTracks.text = itemView.context
-            .getString(R.string.track_count, model.tracks.size, getRightWord(model.tracks.size))
+            .resources.getQuantityString(R.plurals.plural_tracks, model.tracks.size, model.tracks.size)
+            //и тут поменял на глайд
+            val file = model.image?.let { File(filePath, it.toUri().lastPathSegment) }
+            Glide.with(itemView)
+                .load(file)
+                .placeholder(R.drawable.placeholder)
+                .centerCrop()
+                .into(playlistImage)
 
-        if (model.image == null) {
-            playlistImage.setImageResource(R.drawable.placeholder)
-        } else {
-            val file = model.image.lastPathSegment?.let { File(filePath, it) }
-            playlistImage.setImageURI(file?.toUri())
-        }
 
         itemView.setOnClickListener {
             listener.onClick(model)
-        }
-    }
-    private fun getRightWord(tracks: Int): String {
-        var trackCount = tracks
-        trackCount = abs(trackCount) % 100
-        val tracksTmp = (trackCount % 10)
-        if (trackCount in 11..19) {
-            return itemView.context.getString(R.string.tracks)
-        }
-        if (tracksTmp in 2..4) {
-            return itemView.context.getString(R.string.tracks_alt)
-        }
-        if (trackCount == 0) {
-            return itemView.context.getString(R.string.tracks)
-        }
-        return if (tracksTmp == 1) {
-            itemView.context.getString(R.string.track)
-        } else {
-            itemView.context.getString(R.string.tracks)
         }
     }
 

@@ -46,7 +46,7 @@
 
     <style name="EditTextStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:drawablePadding">8dp</item>
         <item name="android:drawableStart">@drawable/small_search</item>
         <item name="android:drawableTint">@color/grey_main</item>
@@ -355,6 +355,27 @@
         <item name="android:ellipsize">marquee</item>
         <item name="android:marqueeRepeatLimit">marquee_forever</item>
         <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/white</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <!-- Style for negative button -->
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <!-- text color for the button -->
+        <item name="android:textColor">@color/blue_main</item>
+        <!-- Background tint for the button -->
+        <item name="android:backgroundTint">@color/white_main</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <!-- text color for the button -->
+        <item name="android:textColor">@color/blue_main</item>
+        <!-- Background tint for the button -->
+        <item name="android:backgroundTint">@color/white_main</item>
     </style>
 
 

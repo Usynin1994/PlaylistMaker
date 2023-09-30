@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class TrackEntity (
     val artistName: String,
     val artworkUrl100: String,
+    val artworkUrl60: String,
     val country: String,
     val previewUrl: String?,
     val primaryGenreName: String,

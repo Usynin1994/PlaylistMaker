@@ -7,6 +7,7 @@ import com.example.playlistmaker.domain.model.Track
 fun Track.toTrackEntity() : TrackEntity {
     return TrackEntity(artistName,
         artworkUrl100,
+        artworkUrl60,
         country,
         previewUrl,
         primaryGenreName,
@@ -22,6 +23,7 @@ fun Track.toTrackEntity() : TrackEntity {
 fun TrackEntity.toTrack() : Track {
     return Track(artistName,
         artworkUrl100,
+        artworkUrl60,
         country,
         previewUrl,
         primaryGenreName,
@@ -35,6 +37,7 @@ fun TrackEntity.toTrack() : Track {
 fun TrackDto.toTrack() : Track {
     return Track(artistName,
         artworkUrl100,
+        artworkUrl60,
         country,
         previewUrl,
         primaryGenreName,

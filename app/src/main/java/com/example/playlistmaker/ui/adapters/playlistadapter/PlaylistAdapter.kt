@@ -9,7 +9,7 @@ import com.example.playlistmaker.domain.model.Playlist
 
 class PlaylistAdapter (private val listener: ClickListener, private val cardObject: CardObjects) :
     RecyclerView.Adapter<PlaylistViewHolder>() {
-    internal var playlists = ArrayList<Playlist>()
+    internal var playlists = listOf<Playlist>()
         set(newValue) {
             val diffCallBack = PlaylistDiffCallBack(field, newValue)
             val diffResult = DiffUtil.calculateDiff(diffCallBack)
